@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<!--
+/**
+ * ============================================================================
+ * Proyecto: Creador de Títulos Animados (Lower Thirds) & Estudio 3D 60 FPS
+ * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+ * Rol: Desarrollador de Soluciones con Modelos & Agentes Inteligentes
+ * Repositorio: https://github.com/rogerrcarvajal/contect-creator-tools
+ * Estándar: Clean Architecture / DDD / Zero-Trust Security / Quantum Glass UI
+ * ============================================================================
+ */
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motion Graphics, Animaciones & Lower Thirds Studio (60 FPS) — Gemini 4 Argon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/brand-quantum.css" />
+  <style>
+    .mg-layout {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1080px) {
+      .mg-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mg-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+      background: rgba(11, 15, 25, 0.92);
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .mg-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .mg-brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+    }
+
+    .mg-brand h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .mg-brand p {
+      margin: 0;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.38rem;
+      margin-bottom: 0.95rem;
+    }
+
+    .form-field label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-glass, .select-glass {
+      width: 100%;
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.62rem 0.8rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.88rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-glass:focus, .select-glass:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .canvas-stage-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .canvas-viewport {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-glass);
+      position: relative;
+      background-color: #0b0f19;
+      /* Checkerboard pattern for transparent mode */
+      background-image:
+        linear-gradient(45deg, #161f30 25%, transparent 25%),
+        linear-gradient(-45deg, #161f30 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #161f30 75%),
+        linear-gradient(-45deg, transparent 75%, #161f30 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    #mgCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .stage-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+    }
+
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .chip-btn {
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-glass);
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip-btn:hover, .chip-btn.active {
+      color: #ffffff;
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.18);
+    }
+
+    .status-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="mg-topbar">
+    <div class="mg-brand">
+      <div class="mg-brand-icon" aria-hidden="true">✨</div>
+      <div>
+        <h1>Motion Graphics, Lower Thirds &amp; Estudio 3D (60 FPS)</h1>
+        <p>Generador de Títulos Animados, Físicas de Rebote y Exportación WebCodecs / MP4 • Por Rogerr Carvajal</p>
+      </div>
+    </div>
+    <nav style="display:flex;gap:0.6rem;flex-wrap:wrap;" aria-label="Navegación de herramienta">
+      <a href="../index.html" id="btnBackMainHub" class="btn-secondary">🏠 Volver al Hub</a>
+      <button type="button" id="btnCopyPromptMg" class="btn-secondary">📋 Copiar Prompt Original</button>
+      <button type="button" id="btnExportMp4Mg" class="btn-primary">🎥 Exportar a MP4 (60 FPS)</button>
+    </nav>
+  </header>
+
+  <main class="mg-layout">
+    <!-- CONTROLS PANEL -->
+    <aside class="card-glass" aria-labelledby="controlsHeading">
+      <h2 id="controlsHeading" style="font-size:1.05rem;margin-top:0;margin-bottom:1rem;color:var(--accent-cyan);">
+        🎛️ Controles de Animación &amp; Diseño
+      </h2>
+
+      <div class="form-field">
+        <label for="inputMainTitle">1. Título Principal:</label>
+        <input type="text" id="inputMainTitle" class="input-glass" value="ROGERR CARVAJAL" maxlength="48" />
+      </div>
+
+      <div class="form-field">
+        <label for="inputSubtitle">Subtítulo / Rol Profesional:</label>
+        <input type="text" id="inputSubtitle" class="input-glass" value="Lead AI Engineer &amp; Agent Systems Architect" maxlength="68" />
+      </div>
+
+      <div class="form-field">
+        <label for="inputBadgeTag">Etiqueta Superior / Badge:</label>
+        <input type="text" id="inputBadgeTag" class="input-glass" value="GEMINI 4 ARGON • 60 FPS" maxlength="32" />
+      </div>
+
+      <div class="form-field">
+        <label for="selectVisualStyle">2. Selector de Estilo Visual:</label>
+        <select id="selectVisualStyle" class="select-glass">
+          <option value="minimalista">✨ Minimalista (Clean Glass &amp; Línea Fina)</option>
+          <option value="neon" selected>⚡ Neón (Quantum Cyber Glow &amp; Gradiente)</option>
+          <option value="corporativo">🏢 Corporativo (Broadcast News / Keynote)</option>
+          <option value="estudio3d">🌐 Estudio 3D Orb &amp; Bento (WebCodecs 3D)</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="selectAnimationType">3. Selector de Animación:</label>
+        <select id="selectAnimationType" class="select-glass">
+          <option value="suave">🌊 Suave (Cubic-Bezier Ease Out)</option>
+          <option value="rebote" selected>🏀 Rebote (Elastic Spring Physics)</option>
+          <option value="rapida">⚡ Entrada Rápida (Kinetic Whip Slide)</option>
+          <option value="orbita3d">🪐 Giro 3D Orbital (Perspectiva Dinámica)</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="selectBgType">4. Selector de Fondo:</label>
+        <select id="selectBgType" class="select-glass">
+          <option value="transparent">🏁 Transparente (Alpha Grid)</option>
+          <option value="dark" selected>🌑 Oscuro (Quantum Studio #0b0f19)</option>
+          <option value="chroma_green">🟩 Verde Chroma (#00FF00 Broadcast)</option>
+          <option value="chroma_blue">🟦 Azul Chroma (#0047BB Broadcast)</option>
+        </select>
+      </div>
+
+      <div class="two-cols">
+        <div class="form-field">
+          <label for="inputAccentColor1">Color Primario:</label>
+          <input type="color" id="inputAccentColor1" class="input-glass" value="#38bdf8" style="height:40px;padding:3px;" />
+        </div>
+        <div class="form-field">
+          <label for="inputAccentColor2">Color Secundario:</label>
+          <input type="color" id="inputAccentColor2" class="input-glass" value="#8b5cf6" style="height:40px;padding:3px;" />
+        </div>
+      </div>
+
+      <div class="two-cols">
+        <div class="form-field">
+          <label for="selectPosition">Posición en Pantalla:</label>
+          <select id="selectPosition" class="select-glass">
+            <option value="bottom_left" selected>↙ Lower Third Izq.</option>
+            <option value="bottom_center">⬇ Lower Third Centro</option>
+            <option value="bottom_right">↘ Lower Third Der.</option>
+            <option value="center_hero">🎯 Centro Hero / 3D</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="inputDurationSec">Duración Ciclo (s):</label>
+          <input type="number" id="inputDurationSec" class="input-glass" min="2" max="12" step="0.5" value="4.5" />
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.5rem;">
+        <button type="button" id="btnReplayAnim" class="btn-secondary">🔄 Repetir Entrada</button>
+        <button type="button" id="btnTriggerExport" class="btn-primary">⬇ Exportar a MP4</button>
+      </div>
+    </aside>
+
+    <!-- PREVIEW STAGE -->
+    <section class="canvas-stage-card" aria-label="Lienzo de Previsualización 60 FPS">
+      <div class="stage-toolbar">
+        <div class="preset-chips" role="group" aria-label="Plantillas rápidas">
+          <button type="button" class="chip-btn active" data-preset="creator">🎙 Creador Tech Neón</button>
+          <button type="button" class="chip-btn" data-preset="minimal">🍎 Minimal Apple</button>
+          <button type="button" class="chip-btn" data-preset="corporate">📺 Noticiero / Corp</button>
+          <button type="button" class="chip-btn" data-preset="orb3d">🌐 Estudio 3D Orb</button>
+          <button type="button" class="chip-btn" data-preset="chroma">🟩 Listo para Chroma</button>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent-cyan);">
+          <span id="fpsCounterLabel">60 FPS</span> • <span id="timeCounterLabel">t = 0.00s</span>
+        </div>
+      </div>
+
+      <div class="canvas-viewport">
+        <canvas id="mgCanvas" width="1920" height="1080"></canvas>
+      </div>
+
+      <div id="exportStatusBanner" class="status-banner">
+        <span id="exportStatusMessage">✅ Motor Canvas 1920x1080 @ 60 FPS activo. Listo para capturar y exportar.</span>
+        <span id="exportCodecBadge" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;">1080p • 60fps</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * Proyecto: Creador de Títulos Animados (Lower Thirds) & Estudio 3D 60 FPS
+     * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+     * ============================================================================
+     */
+    (function () {
+      'use strict';
+
+      const canvas = document.getElementById('mgCanvas');
+      const ctx = canvas.getContext('2d');
+
+      let animStartTime = performance.now();
+      let isRecording = false;
+
+      function getConfig() {
+        return {
+          title: document.getElementById('inputMainTitle').value || 'ROGERR CARVAJAL',
+          subtitle: document.getElementById('inputSubtitle').value || 'Lead AI Engineer & Agent Architect',
+          badge: document.getElementById('inputBadgeTag').value || 'GEMINI 4 ARGON • 60 FPS',
+          style: document.getElementById('selectVisualStyle').value,
+          anim: document.getElementById('selectAnimationType').value,
+          bg: document.getElementById('selectBgType').value,
+          color1: document.getElementById('inputAccentColor1').value,
+          color2: document.getElementById('inputAccentColor2').value,
+          pos: document.getElementById('selectPosition').value,
+          duration: parseFloat(document.getElementById('inputDurationSec').value) || 4.5
+        };
+      }
+
+      // Easing functions
+      function easeOutCubic(x) {
+        return 1 - Math.pow(1 - x, 3);
+      }
+
+      function easeOutElastic(x) {
+        const c4 = (2 * Math.PI) / 3;
+        return x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
+      }
+
+      function easeOutBack(x) {
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+      }
+
+      function computeProgress(elapsedSec, durationSec, animType) {
+        // Entrance (0 -> 0.9s), Hold, Exit (last 0.6s)
+        const inDur = animType === 'rapida' ? 0.42 : 0.95;
+        const outStart = Math.max(inDur + 0.5, durationSec - 0.65);
+
+        let p = 1.0;
+        if (elapsedSec < inDur) {
+          const raw = Math.max(0, Math.min(1, elapsedSec / inDur));
+          if (animType === 'suave') p = easeOutCubic(raw);
+          else if (animType === 'rebote') p = easeOutElastic(raw);
+          else if (animType === 'rapida') p = easeOutBack(raw);
+          else p = easeOutCubic(raw);
+        } else if (elapsedSec > outStart) {
+          const rawOut = Math.max(0, Math.min(1, (durationSec - elapsedSec) / (durationSec - outStart)));
+          p = easeOutCubic(rawOut);
+        }
+        return p;
+      }
+
+      function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+        if (fill) ctx.fill();
+        if (stroke) ctx.stroke();
+      }
+
+      function render(now) {
+        const cfg = getConfig();
+        const W = canvas.width;
+        const H = canvas.height;
+        const elapsed = ((now - animStartTime) / 1000) % cfg.duration;
+        document.getElementById('timeCounterLabel').textContent = `t = ${elapsed.toFixed(2)}s`;
+
+        // Clear or fill background
+        ctx.clearRect(0, 0, W, H);
+        if (cfg.bg === 'dark') {
+          const bgGrad = ctx.createRadialGradient(W * 0.5, H * 0.5, 100, W * 0.5, H * 0.5, W * 0.75);
+          bgGrad.addColorStop(0, '#131c31');
+          bgGrad.addColorStop(1, '#080b14');
+          ctx.fillStyle = bgGrad;
+          ctx.fillRect(0, 0, W, H);
+
+          // Subtle perspective floor grid
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.07)';
+          ctx.lineWidth = 1;
+          for (let gx = 0; gx < W; gx += 96) {
+            ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+          }
+          for (let gy = 0; gy < H; gy += 96) {
+            ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+          }
+        } else if (cfg.bg === 'chroma_green') {
+          ctx.fillStyle = '#00FF00';
+          ctx.fillRect(0, 0, W, H);
+        } else if (cfg.bg === 'chroma_blue') {
+          ctx.fillStyle = '#0047BB';
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        const prog = computeProgress(elapsed, cfg.duration, cfg.anim);
+
+        // Measure text widths
+        ctx.font = '800 54px Outfit, sans-serif';
+        const titleW = ctx.measureText(cfg.title).width;
+        ctx.font = '500 28px Inter, sans-serif';
+        const subW = ctx.measureText(cfg.subtitle).width;
+        const boxW = Math.max(620, Math.max(titleW, subW) + 160);
+        const boxH = 175;
+
+        // Calculate anchor coordinates
+        let baseX = 120;
+        let baseY = H - boxH - 110;
+        if (cfg.pos === 'bottom_center') {
+          baseX = (W - boxW) / 2;
+        } else if (cfg.pos === 'bottom_right') {
+          baseX = W - boxW - 120;
+        } else if (cfg.pos === 'center_hero') {
+          baseX = (W - boxW) / 2;
+          baseY = (H - boxH) / 2;
+        }
+
+        ctx.save();
+
+        // Apply animation transform
+        if (cfg.anim === 'suave') {
+          ctx.globalAlpha = Math.max(0, Math.min(1, prog));
+          ctx.translate(0, (1 - prog) * 70);
+        } else if (cfg.anim === 'rebote') {
+          ctx.globalAlpha = Math.min(1, elapsed * 5);
+          const cx = baseX + boxW / 2;
+          const cy = baseY + boxH / 2;
+          ctx.translate(cx, cy);
+          ctx.scale(prog, prog);
+          ctx.translate(-cx, -cy);
+        } else if (cfg.anim === 'rapida') {
+          ctx.globalAlpha = Math.min(1, elapsed * 6);
+          ctx.translate((1 - prog) * -420, 0);
+        } else if (cfg.anim === 'orbita3d') {
+          const cx = baseX + boxW / 2;
+          const cy = baseY + boxH / 2;
+          const tilt = Math.cos(elapsed * 2.4) * 0.14;
+          ctx.translate(cx, cy);
+          ctx.scale(prog * (1 - Math.abs(tilt) * 0.3), prog);
+          ctx.transform(1, tilt * 0.25, -tilt * 0.15, 1, 0, 0);
+          ctx.translate(-cx, -cy);
+        }
+
+        // If 3D Studio Mode, render 3D Wireframe Sphere / Orb behind or beside card
+        if (cfg.style === 'estudio3d') {
+          const orbX = cfg.pos === 'center_hero' ? W / 2 : baseX + boxW + 130;
+          const orbY = cfg.pos === 'center_hero' ? baseY - 120 : baseY + boxH / 2;
+          const radius = 88;
+          ctx.save();
+          ctx.translate(orbX, orbY);
+          for (let ring = 0; ring < 6; ring++) {
+            ctx.beginPath();
+            const angle = elapsed * 1.8 + (ring * Math.PI) / 6;
+            const rx = Math.max(8, Math.abs(Math.cos(angle)) * radius);
+            ctx.ellipse(0, 0, rx, radius, angle * 0.35, 0, Math.PI * 2);
+            ctx.strokeStyle = ring % 2 === 0 ? cfg.color1 : cfg.color2;
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        // Draw Lower Third Card according to Style
+        if (cfg.style === 'minimalista') {
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+          ctx.lineWidth = 2;
+          drawRoundedRect(ctx, baseX, baseY, boxW, boxH, 16, true, true);
+
+          // Minimal Accent Line
+          ctx.fillStyle = cfg.color1;
+          ctx.fillRect(baseX, baseY + 26, 6, boxH - 52);
+        } else if (cfg.style === 'neon' || cfg.style === 'estudio3d') {
+          ctx.shadowColor = cfg.color1;
+          ctx.shadowBlur = 28;
+          const cardGrad = ctx.createLinearGradient(baseX, baseY, baseX + boxW, baseY + boxH);
+          cardGrad.addColorStop(0, 'rgba(15, 23, 42, 0.92)');
+          cardGrad.addColorStop(1, 'rgba(30, 27, 75, 0.88)');
+          ctx.fillStyle = cardGrad;
+          ctx.strokeStyle = cfg.color1;
+          ctx.lineWidth = 3;
+          drawRoundedRect(ctx, baseX, baseY, boxW, boxH, 20, true, true);
+          ctx.shadowBlur = 0;
+
+          // Glowing Left Pill Bar
+          const barGrad = ctx.createLinearGradient(baseX, baseY, baseX, baseY + boxH);
+          barGrad.addColorStop(0, cfg.color1);
+          barGrad.addColorStop(1, cfg.color2);
+          ctx.fillStyle = barGrad;
+          drawRoundedRect(ctx, baseX + 18, baseY + 22, 12, boxH - 44, 6, true, false);
+        } else if (cfg.style === 'corporativo') {
+          // Broadcast Two-Tone Bar
+          ctx.fillStyle = '#0f172a';
+          drawRoundedRect(ctx, baseX, baseY, boxW, boxH, 8, true, false);
+          const corpGrad = ctx.createLinearGradient(baseX, baseY, baseX + 260, baseY);
+          corpGrad.addColorStop(0, cfg.color1);
+          corpGrad.addColorStop(1, cfg.color2);
+          ctx.fillStyle = corpGrad;
+          ctx.fillRect(baseX, baseY, 18, boxH);
+          ctx.fillRect(baseX, baseY + boxH - 8, boxW * Math.min(1, elapsed * 1.2), 8);
+        }
+
+        // Badge Pill
+        if (cfg.badge.trim()) {
+          const badgeGrad = ctx.createLinearGradient(baseX + 48, baseY - 18, baseX + 320, baseY + 18);
+          badgeGrad.addColorStop(0, cfg.color1);
+          badgeGrad.addColorStop(1, cfg.color2);
+          ctx.fillStyle = badgeGrad;
+          ctx.font = '800 18px Inter, sans-serif';
+          const bw = ctx.measureText(cfg.badge).width + 36;
+          drawRoundedRect(ctx, baseX + 48, baseY - 18, bw, 36, 18, true, false);
+          ctx.fillStyle = '#080b12';
+          ctx.textAlign = 'left';
+          ctx.fillText(cfg.badge, baseX + 66, baseY + 6);
+        }
+
+        // Main Title Text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 52px Outfit, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(cfg.title, baseX + 52, baseY + 86);
+
+        // Subtitle Text
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '500 27px Inter, sans-serif';
+        ctx.fillText(cfg.subtitle, baseX + 52, baseY + 134);
+
+        ctx.restore();
+        requestAnimationFrame(render);
+      }
+
+      // Replay button
+      document.getElementById('btnReplayAnim').addEventListener('click', () => {
+        animStartTime = performance.now();
+      });
+
+      // Trigger replay on style/animation change
+      ['selectVisualStyle', 'selectAnimationType', 'selectPosition'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+          animStartTime = performance.now();
+        });
+      });
+
+      // Quick Preset Chips
+      document.querySelectorAll('.chip-btn').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.chip-btn').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          const p = chip.getAttribute('data-preset');
+          if (p === 'creator') {
+            document.getElementById('selectVisualStyle').value = 'neon';
+            document.getElementById('selectAnimationType').value = 'rebote';
+            document.getElementById('selectBgType').value = 'dark';
+            document.getElementById('selectPosition').value = 'bottom_left';
+          } else if (p === 'minimal') {
+            document.getElementById('selectVisualStyle').value = 'minimalista';
+            document.getElementById('selectAnimationType').value = 'suave';
+            document.getElementById('selectBgType').value = 'dark';
+            document.getElementById('selectPosition').value = 'bottom_left';
+          } else if (p === 'corporate') {
+            document.getElementById('selectVisualStyle').value = 'corporativo';
+            document.getElementById('selectAnimationType').value = 'rapida';
+            document.getElementById('selectBgType').value = 'dark';
+            document.getElementById('selectPosition').value = 'bottom_left';
+          } else if (p === 'orb3d') {
+            document.getElementById('selectVisualStyle').value = 'estudio3d';
+            document.getElementById('selectAnimationType').value = 'orbita3d';
+            document.getElementById('selectBgType').value = 'dark';
+            document.getElementById('selectPosition').value = 'center_hero';
+          } else if (p === 'chroma') {
+            document.getElementById('selectVisualStyle').value = 'neon';
+            document.getElementById('selectAnimationType').value = 'rebote';
+            document.getElementById('selectBgType').value = 'chroma_green';
+            document.getElementById('selectPosition').value = 'bottom_left';
+          }
+          animStartTime = performance.now();
+        });
+      });
+
+      // Export to MP4 at 60 FPS
+      function startCanvasExport() {
+        if (isRecording) return;
+        isRecording = true;
+        const cfg = getConfig();
+        const statusMsg = document.getElementById('exportStatusMessage');
+        const btnTop = document.getElementById('btnExportMp4Mg');
+        const btnSide = document.getElementById('btnTriggerExport');
+
+        btnTop.disabled = true;
+        btnSide.disabled = true;
+        statusMsg.textContent = `⏳ Capturando animación del Canvas a 60 FPS durante ${cfg.duration}s...`;
+
+        animStartTime = performance.now();
+        const stream = canvas.captureStream(60);
+        const mimeType = MediaRecorder.isTypeSupported('video/mp4')
+          ? 'video/mp4'
+          : (MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm');
+
+        const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 10000000 });
+        const chunks = [];
+        recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: mimeType });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `LowerThird_${cfg.style}_60fps.mp4`;
+          a.click();
+          isRecording = false;
+          btnTop.disabled = false;
+          btnSide.disabled = false;
+          statusMsg.textContent = `✅ ¡Exportación completada! Archivo LowerThird_${cfg.style}_60fps.mp4 descargado a 60 FPS.`;
+        };
+
+        recorder.start();
+        setTimeout(() => {
+          recorder.stop();
+        }, cfg.duration * 1000);
+      }
+
+      document.getElementById('btnExportMp4Mg').addEventListener('click', startCanvasExport);
+      document.getElementById('btnTriggerExport').addEventListener('click', startCanvasExport);
+
+      document.getElementById('btnCopyPromptMg').addEventListener('click', () => {
+        const promptText = `Crea una app web en un solo archivo HTML para generar textos animados (Lower Thirds). Debe tener una interfaz fácil de usar. Controles: 1. Inputs para Título y Subtítulo. 2. Selector de Estilo Visual (Minimalista, Neón, Corporativo). 3. Selector de Animación (Suave, Rebote, Entrada Rápida). 4. Selector de Fondo: Transparente, Oscuro o Verde Chroma. Funcionalidad: Un botón "Exportar a MP4" que capture la animación del Canvas a 60fps y descargue el video para usarlo en cualquier editor.`;
+        navigator.clipboard.writeText(promptText);
+        document.getElementById('exportStatusMessage').textContent = '📋 Prompt maestro copiado al portapapeles.';
+      });
+
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>

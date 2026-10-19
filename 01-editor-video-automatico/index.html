@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<!--
+/**
+ * ============================================================================
+ * Proyecto: Gemini 4 Argon Motion Engine — Estudio NLE Interactivo 60 FPS
+ * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+ * Rol: Desarrollador de Soluciones con Modelos & Agentes Inteligentes
+ * Repositorio: https://github.com/rogerrcarvajal/contect-creator-tools
+ * Estándar: Clean Architecture / DDD / Zero-Trust Security / Quantum Glass UI
+ * ============================================================================
+ */
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini 4 Argon Motion Engine — Estudio NLE Interactivo 60 FPS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/brand-quantum.css" />
+  <style>
+    :root {
+      --nle-bg: #080b12;
+      --nle-panel: #0f1420;
+      --nle-card: #151c2c;
+      --nle-border: rgba(255, 255, 255, 0.08);
+      --nle-border-bright: rgba(56, 189, 248, 0.4);
+      --nle-purple: #8b5cf6;
+      --nle-indigo: #6366f1;
+      --nle-cyan: #38bdf8;
+      --nle-green: #10b981;
+      --nle-amber: #f59e0b;
+      --nle-red: #ef4444;
+    }
+
+    body {
+      background: var(--nle-bg);
+      color: #f8fafc;
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Top Header */
+    .nle-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      background: rgba(13, 18, 30, 0.95);
+      border-bottom: 1px solid var(--nle-border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nle-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nle-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #38bdf8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+
+    .nle-title-group h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .nle-title-group p {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .nle-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-nle {
+      background: #1a2234;
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nle:hover {
+      background: #243048;
+      border-color: var(--nle-cyan);
+      color: #ffffff;
+    }
+
+    .btn-nle-green {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #34d399;
+    }
+
+    .btn-nle-green:hover {
+      background: rgba(16, 185, 129, 0.3);
+      color: #ecfdf5;
+      border-color: #10b981;
+    }
+
+    /* Main Workspace Grid (3 Columns Top + Full Width Timeline Bottom) */
+    .nle-workspace {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nle-top-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr 350px;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1280px) {
+      .nle-top-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .nle-panel {
+      background: var(--nle-panel);
+      border: 1px solid var(--nle-border);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .panel-header h2 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin: 0;
+      color: #f1f5f9;
+    }
+
+    .badge-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.18rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Dropzone */
+    .dropzone {
+      border: 1.5px dashed rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      padding: 0.9rem;
+      text-align: center;
+      background: rgba(21, 28, 44, 0.6);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--nle-cyan);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .dropzone strong {
+      display: block;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      margin-bottom: 0.2rem;
+    }
+
+    .dropzone span {
+      font-size: 0.68rem;
+      color: #64748b;
+    }
+
+    .loaded-video-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 8px;
+      padding: 0.45rem 0.65rem;
+      font-size: 0.72rem;
+      color: #34d399;
+      gap: 0.5rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .control-label {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nle-select, .nle-input {
+      width: 100%;
+      background: #090d16;
+      color: #f1f5f9;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 0.5rem 0.65rem;
+      font-size: 0.76rem;
+      font-family: inherit;
+    }
+
+    .btn-process {
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 18px rgba(139, 92, 246, 0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-process:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(139, 92, 246, 0.6);
+    }
+
+    .mini-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
+    }
+
+    .btn-mini {
+      background: #151d2e;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 0.4rem 0.35rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-mini:hover {
+      border-color: var(--nle-cyan);
+      color: #ffffff;
+      background: #1e293b;
+    }
+
+    /* Progress & Live Console */
+    .status-bar-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .status-bar-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      height: 5px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #10b981, #38bdf8);
+      transition: width 0.3s ease;
+    }
+
+    .live-console {
+      background: #06090f;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 150px;
+    }
+
+    .console-bar {
+      background: #0d131f;
+      padding: 0.35rem 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.65rem;
+      color: #64748b;
+    }
+
+    .mac-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .mac-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .console-body {
+      padding: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: #94a3b8;
+      overflow-y: auto;
+      max-height: 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .console-body .log-ok {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* Center Panel: Monitor */
+    .monitor-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .layer-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .pill-v1 {
+      background: rgba(59, 130, 246, 0.18);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .pill-mg {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .pill-sub {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .monitor-stage-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #111827 0%, #070a10 100%);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 0.75rem;
+      position: relative;
+      min-height: 410px;
+    }
+
+    #nleMonitorCanvas {
+      background: #05070c;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      cursor: grab;
+      max-height: 380px;
+      width: auto;
+      max-width: 100%;
+    }
+
+    #nleMonitorCanvas:active {
+      cursor: grabbing;
+    }
+
+    .monitor-controls {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 0.6rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      padding: 0.35rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .btn-play-circle {
+      background: #ffffff;
+      color: #090d16;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .monitor-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+
+    .kpi-box {
+      background: #0b101b;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px;
+      padding: 0.55rem 0.7rem;
+    }
+
+    .kpi-box span {
+      display: block;
+      font-size: 0.65rem;
+      color: #64748b;
+    }
+
+    .kpi-box strong {
+      font-size: 0.88rem;
+      color: #f8fafc;
+      font-weight: 700;
+    }
+
+    /* Right Panel: Keyframes & Properties */
+    .prop-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      background: #090d16;
+      padding: 0.25rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .prop-tab-btn {
+      background: transparent;
+      color: #94a3b8;
+      border: none;
+      border-radius: 6px;
+      padding: 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .prop-tab-btn.active {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .two-col-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .keyframe-box {
+      background: #0a0f1a;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 10px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .kf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: #fbbf24;
+      font-weight: 700;
+    }
+
+    .kf-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 42px 26px;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      color: #cbd5e1;
+    }
+
+    .kf-diamond-btn {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      border-radius: 5px;
+      width: 24px;
+      height: 24px;
+      font-size: 0.68rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kf-diamond-btn:hover {
+      background: #f59e0b;
+      color: #090d16;
+    }
+
+    .kf-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .btn-preset {
+      background: #141c2e;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.67rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-preset:hover {
+      border-color: #fbbf24;
+      color: #ffffff;
+    }
+
+    .prop-bottom-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .btn-save-tl {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #34d399;
+      border-radius: 8px;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-del-tl {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      border-radius: 8px;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Bottom Section: Copilot + Multilayer Timeline */
+    .copilot-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: #0b101c;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .copilot-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #38bdf8;
+      white-space: nowrap;
+    }
+
+    .copilot-input {
+      flex: 1;
+      min-width: 240px;
+      background: #060911;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 7px;
+      padding: 0.48rem 0.75rem;
+      font-size: 0.76rem;
+    }
+
+    .btn-copilot-apply {
+      background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.5rem 1rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .quick-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+
+    .quick-pill {
+      background: #141c2c;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+      padding: 0.26rem 0.65rem;
+      font-size: 0.69rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .quick-pill:hover {
+      border-color: var(--nle-cyan);
+      color: #ffffff;
+    }
+
+    /* Timeline Table */
+    .timeline-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .timeline-container {
+      background: #070a12;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      overflow-x: auto;
+      position: relative;
+      user-select: none;
+    }
+
+    .timeline-inner {
+      min-width: 1100px;
+      position: relative;
+    }
+
+    .tl-row {
+      display: grid;
+      grid-template-columns: 165px 1fr;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      min-height: 44px;
+    }
+
+    .tl-row.ruler-row {
+      min-height: 28px;
+      background: #0c1220;
+    }
+
+    .tl-label {
+      padding: 0.45rem 0.7rem;
+      background: #0b101b;
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .tl-label strong {
+      font-size: 0.72rem;
+      color: #e2e8f0;
+    }
+
+    .tl-label span {
+      font-size: 0.62rem;
+      color: #64748b;
+    }
+
+    .tl-track-lane {
+      position: relative;
+      background: rgba(15, 20, 32, 0.55);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .tl-ruler-marks {
+      position: relative;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: #64748b;
+    }
+
+    .tl-block {
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      border-radius: 6px;
+      padding: 0 0.45rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      transition: filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .tl-block:hover, .tl-block.selected {
+      filter: brightness(1.2);
+      box-shadow: 0 0 0 2px #fbbf24;
+      z-index: 4;
+    }
+
+    .tl-block.fx-block {
+      background: linear-gradient(90deg, rgba(168, 85, 247, 0.75), rgba(139, 92, 246, 0.85));
+      border: 1px solid #c084fc;
+    }
+
+    .tl-block.sub-block {
+      background: rgba(30, 58, 138, 0.75);
+      border: 1px solid rgba(96, 165, 250, 0.6);
+      font-size: 0.6rem;
+    }
+
+    .tl-block.mg-block {
+      background: linear-gradient(90deg, rgba(5, 150, 105, 0.85), rgba(16, 185, 129, 0.85));
+      border: 1px solid #34d399;
+    }
+
+    .tl-block.v1-block {
+      background: linear-gradient(90deg, rgba(29, 78, 216, 0.75), rgba(37, 99, 235, 0.85));
+      border: 1px solid #60a5fa;
+    }
+
+    /* Playhead Needle */
+    .playhead-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #ef4444;
+      z-index: 20;
+      pointer-events: none;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
+    }
+
+    .playhead-head {
+      position: absolute;
+      top: 0;
+      left: -6px;
+      width: 14px;
+      height: 14px;
+      background: #ef4444;
+      border-radius: 3px 3px 50% 50%;
+    }
+
+    /* Waveform Bars */
+    .waveform-canvas {
+      width: 100%;
+      height: 44px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="nle-header">
+    <div class="nle-brand">
+      <div class="nle-logo" aria-hidden="true">✦</div>
+      <div class="nle-title-group">
+        <h1>Gemini 4 Argon Motion Engine — Estudio NLE Interactivo 60 FPS</h1>
+        <p>Control de Fotogramas Clave ◆ (Escala, Posición, Opacidad) • Editor de Tipografía de Subtítulos • Previsualización 0ms • Por Rogerr Carvajal</p>
+      </div>
+    </div>
+    <nav class="nle-header-actions" aria-label="Acciones del Estudio NLE">
+      <a href="../index.html" id="btnBackHub" class="btn-nle">🏠 Hub Principal</a>
+      <button type="button" id="btnDownloadProjectJson" class="btn-nle">📦 Descargar Paquete .JSON</button>
+      <button type="button" id="btnCopyMegaPrompt" class="btn-nle">📋 Copiar Mega-Prompt</button>
+      <button type="button" id="btnExportMasterMp4" class="btn-nle btn-nle-green">⬇ Descargar Master.MP4 (60 FPS)</button>
+    </nav>
+  </header>
+
+  <main class="nle-workspace">
+    <!-- TOP 3-COLUMN STUDIO -->
+    <div class="nle-top-grid">
+
+      <!-- COLUMN 1: VIDEOS & GLOBAL STYLE -->
+      <section class="nle-panel" aria-labelledby="col1Title">
+        <div class="panel-header">
+          <h2 id="col1Title">1. Videos y Estilo Global</h2>
+          <span class="badge-tag">MULTI-VIDEO</span>
+        </div>
+
+        <div id="videoDropzone" class="dropzone" tabindex="0" role="button" aria-label="Arrastra 1 o varios videos aquí">
+          <strong>Arrastra 1 o varios videos aquí</strong>
+          <span>Une múltiples tomas y elimina silencios automáticamente</span>
+          <input type="file" id="inputVideoUpload" accept="video/*" multiple hidden />
+        </div>
+
+        <div id="loadedVideoBadge" class="loaded-video-pill">
+          <span id="loadedVideoName">🎬 2026-09-18_11-35-50.mp4 (Vertical 9:16 • Kinetic Pro)</span>
+          <span>9:16 • 60 FPS</span>
+        </div>
+
+        <div class="control-group">
+          <label for="selectCameraFormat" class="control-label">📐 Formato y Rotación de Cámara:</label>
+          <select id="selectCameraFormat" class="nle-select">
+            <option value="9:16" selected>📱 Vertical 9:16 (Rotar Cámara 90° Horario • OBS Vert)</option>
+            <option value="16:9">🖥️ Horizontal 16:9 (1920x1080 • YouTube Master)</option>
+            <option value="1:1">⬛ Cuadrado 1:1 (1080x1080 • Social Feed)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="selectEditStyle" class="control-label">🎨 Estilo de Edición y Animación:</label>
+          <select id="selectEditStyle" class="nle-select">
+            <option value="apple" selected>🍎 Apple Keynote Studio (Frosted Glass + Bento 3D)</option>
+            <option value="hormozi">🔥 Estilo Hormozi Viral (Subtítulos Impacto + Zooms)</option>
+            <option value="kinetic">⚡ Estilo Kinetic Pro (Cortes Rápidos + Neón)</option>
+          </select>
+        </div>
+
+        <button type="button" id="btnProcessVideos" class="btn-process">
+          ✨ Procesar Nuevo(s) Video(s)
+        </button>
+
+        <div class="mini-actions-grid">
+          <button type="button" id="btnAddMgScene" class="btn-mini">＋ Escena MG</button>
+          <button type="button" id="btnAddFxTitle" class="btn-mini">＋ Título FX</button>
+          <button type="button" id="btnSplitPlayhead" class="btn-mini">✂ Cortar en Aguja</button>
+        </div>
+
+        <div class="status-bar-box">
+          <div class="status-bar-top">
+            <span id="statusTextLabel">¡Master 60 FPS listo y sincronizado con la Línea de Tiempo!</span>
+            <span id="statusPercentLabel">100%</span>
+          </div>
+          <div class="progress-track">
+            <div id="statusProgressBar" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="live-console" aria-label="Consola en vivo de procesamiento">
+          <div class="console-bar">
+            <div class="mac-dots">
+              <span style="background:#ef4444"></span>
+              <span style="background:#f59e0b"></span>
+              <span style="background:#10b981"></span>
+            </div>
+            <span>Consola en Vivo</span>
+            <span id="consoleStatusBadge" style="color:#10b981;font-weight:700;">COMPLETED</span>
+          </div>
+          <div id="consoleOutput" class="console-body">
+            <div>[19:02:18] Analizando envolvente de audio RMS (-38dB umbral)...</div>
+            <div>[19:02:21] 11 silencios detectados (-22.01s ahorrados en Jump Cuts).</div>
+            <div>[19:02:25] Renderizando a 60fps (720x1280)... 80% • t=0:43</div>
+            <div>[19:02:31] Renderizando a 60fps (720x1280)... 88% • t=0:48</div>
+            <div>[19:02:36] Renderizando a 60fps (720x1280)... 96% • t=0:52</div>
+            <div class="log-ok">[19:02:39] ¡Master 60 FPS completado en 64.89s!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 2: INTERACTIVE MONITOR -->
+      <section class="nle-panel" aria-labelledby="col2Title">
+        <div class="panel-header">
+          <h2 id="col2Title">2. Monitor Interactivo (Arrastra en pantalla para Posición • Rueda = Zoom)</h2>
+          <span id="timecodeHeaderBadge" class="badge-tag" style="font-family:'JetBrains Mono',monospace;">00:17.81 / 00:54.76</span>
+        </div>
+
+        <div class="monitor-badges">
+          <span id="badgeActiveClip" class="layer-pill pill-v1">🎬 V1 • Clip #3 9.7s</span>
+          <span id="badgeActiveMg" class="layer-pill pill-mg">✨ MG #1 • COMPOSICIÓN PRO AFTER EFFECTS</span>
+          <span id="badgeActiveSub" class="layer-pill pill-sub">💬 TAN AVANZADO</span>
+        </div>
+
+        <div class="monitor-stage-wrap">
+          <canvas id="nleMonitorCanvas" width="720" height="1280"></canvas>
+          <video id="hiddenUserVideo" playsinline muted loop hidden></video>
+
+          <div class="monitor-controls">
+            <button type="button" id="btnPlayPause" class="btn-play-circle" aria-label="Reproducir o Pausar">▶</button>
+            <span id="playerCurrentTime" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#cbd5e1;">0:17</span>
+            <input type="range" id="sliderMonitorSeek" min="0" max="54.76" step="0.01" value="17.81" style="flex:1;accent-color:#38bdf8;" aria-label="Posición de reproducción" />
+            <button type="button" id="btnToggleAudio" class="btn-mini" style="padding:0.2rem 0.45rem;" aria-label="Activar sonido">🔊</button>
+          </div>
+        </div>
+
+        <div class="monitor-kpis">
+          <div class="kpi-box">
+            <span>Jump Cuts (&gt;0.48s)</span>
+            <strong id="kpiJumpCuts">11 (-22.01s)</strong>
+          </div>
+          <div class="kpi-box">
+            <span>Subtítulos Editables</span>
+            <strong id="kpiSubtitles">77 bloques</strong>
+          </div>
+          <div class="kpi-box">
+            <span>Escenas Full-Screen MG</span>
+            <strong id="kpiMgScenes">4 Escenas MG</strong>
+          </div>
+          <div class="kpi-box">
+            <span>Formato Master</span>
+            <strong id="kpiMasterFormat">720x1280 @ 60fps</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 3: PROPERTIES & KEYFRAMES STUDIO -->
+      <section class="nle-panel" aria-labelledby="col3Title">
+        <div class="panel-header">
+          <h2 id="col3Title">3. Estudio de Propiedades &amp; Keyframes</h2>
+          <span id="selectedBlockTypeBadge" class="badge-tag">ESCENA MG</span>
+        </div>
+
+        <div class="prop-tabs" role="tablist">
+          <button type="button" id="tabBtnTransform" class="prop-tab-btn active" role="tab" aria-selected="true">◆ Escala, Posición &amp; Opacidad</button>
+          <button type="button" id="tabBtnTypography" class="prop-tab-btn" role="tab" aria-selected="false">🔤 Tipografía de Subtítulos</button>
+        </div>
+
+        <!-- TAB 1: TRANSFORM & KEYFRAMES -->
+        <div id="tabPanelTransform" style="display:flex;flex-direction:column;gap:0.7rem;flex:1;">
+          <div style="font-size:0.75rem;font-weight:700;color:#38bdf8;" id="inspectorBlockHeading">Escena Motion Graphics #1</div>
+
+          <div class="control-group">
+            <label for="inputBlockLabel" class="control-label">Texto / Etiqueta del Bloque:</label>
+            <input type="text" id="inputBlockLabel" class="nle-input" value="EDICIÓN QUE SE PAGA BIEN" />
+          </div>
+
+          <div class="control-group">
+            <label for="selectMgTemplate" class="control-label">Plantilla de Escena Motion Graphics (60 FPS):</label>
+            <select id="selectMgTemplate" class="nle-select">
+              <option value="bento_nodes" selected>🎛️ Bento 3D • Nodos After Effects Pro</option>
+              <option value="bezier_3d">📐 Curvas Bézier 3D • Speed Graph Elástico</option>
+              <option value="checklist_viral">✅ Checklist Viral • Retención &amp; Ritmo</option>
+              <option value="apple_glass">🍎 Apple Keynote Liquid Glass • Flotante</option>
+              <option value="metrics_neon">📈 Contador Neón • De $5 a $10K ROI</option>
+              <option value="kinetic_burst">⚡ Kinetic Typography • Impacto Full-Screen</option>
+            </select>
+          </div>
+
+          <div class="two-col-inputs">
+            <div class="control-group">
+              <label for="inputStartTime" class="control-label">Inicio (s):</label>
+              <input type="number" id="inputStartTime" class="nle-input" step="0.05" value="15.75" />
+            </div>
+            <div class="control-group">
+              <label for="inputEndTime" class="control-label">Fin (s):</label>
+              <input type="number" id="inputEndTime" class="nle-input" step="0.05" value="19.15" />
+            </div>
+          </div>
+
+          <!-- Keyframe Sub-panel -->
+          <div class="keyframe-box">
+            <div class="kf-header">
+              <span>◆ Fotogramas Clave (Escala / Zoom, Posición, Opacidad)</span>
+              <label style="display:flex;align-items:center;gap:0.25rem;cursor:pointer;color:#e2e8f0;font-weight:500;">
+                <input type="checkbox" id="chkAutoKeyframe" checked style="accent-color:#38bdf8;" /> Auto-Keyframe ◆
+              </label>
+            </div>
+
+            <div class="kf-row">
+              <span>🔍 Escala/Zoom</span>
+              <input type="range" id="sliderScale" min="50" max="200" value="100" style="accent-color:#38bdf8;" />
+              <span id="valScale" style="text-align:right;color:#38bdf8;font-weight:700;">100%</span>
+              <button type="button" class="kf-diamond-btn" data-kf-prop="scale" title="Insertar Keyframe de Escala">◆</button>
+            </div>
+
+            <div class="kf-row">
+              <span>↔ Posición X</span>
+              <input type="range" id="sliderPosX" min="-100" max="100" value="0" style="accent-color:#38bdf8;" />
+              <span id="valPosX" style="text-align:right;color:#38bdf8;font-weight:700;">0%</span>
+              <button type="button" class="kf-diamond-btn" data-kf-prop="posX" title="Insertar Keyframe X">◆</button>
+            </div>
+
+            <div class="kf-row">
+              <span>↕ Posición Y</span>
+              <input type="range" id="sliderPosY" min="-100" max="100" value="0" style="accent-color:#38bdf8;" />
+              <span id="valPosY" style="text-align:right;color:#38bdf8;font-weight:700;">0%</span>
+              <button type="button" class="kf-diamond-btn" data-kf-prop="posY" title="Insertar Keyframe Y">◆</button>
+            </div>
+
+            <div class="kf-row">
+              <span>💧 Opacidad</span>
+              <input type="range" id="sliderOpacity" min="0" max="100" value="100" style="accent-color:#38bdf8;" />
+              <span id="valOpacity" style="text-align:right;color:#38bdf8;font-weight:700;">100%</span>
+              <button type="button" class="kf-diamond-btn" data-kf-prop="opacity" title="Insertar Keyframe Opacidad">◆</button>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;">
+              <span id="kfListSummary" style="font-size:0.65rem;color:#64748b;">2 keyframes activos en bloque</span>
+              <div style="display:flex;gap:0.3rem;">
+                <button type="button" id="btnAddKeyframeHere" class="btn-preset">+ ◆ Aquí</button>
+                <button type="button" id="btnClearKeyframes" class="btn-preset">Limpiar ◆</button>
+              </div>
+            </div>
+
+            <div class="kf-presets">
+              <button type="button" class="btn-preset" data-preset="zoom_in">📈 Zoom In (100%→128%)</button>
+              <button type="button" class="btn-preset" data-preset="punch_in">⚡ Punch-In (126%)</button>
+              <button type="button" class="btn-preset" data-preset="zoom_out">📉 Zoom Out (128%→100%)</button>
+              <button type="button" class="btn-preset" data-preset="fade_pop">✨ Fade + Pop</button>
+              <button type="button" class="btn-preset" data-preset="reset">🔄 Reset 100%</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SUBTITLE TYPOGRAPHY -->
+        <div id="tabPanelTypography" style="display:none;flex-direction:column;gap:0.75rem;flex:1;">
+          <div style="font-size:0.75rem;font-weight:700;color:#fbbf24;">Configuración Global de Subtítulos Elásticos</div>
+          <div class="control-group">
+            <label for="selectSubFont" class="control-label">Familia Tipográfica:</label>
+            <select id="selectSubFont" class="nle-select">
+              <option value="Outfit" selected>Outfit ExtraBold (Apple / Hormozi Pro)</option>
+              <option value="Inter">Inter Black (Minimal Clean)</option>
+              <option value="Impact">Impact Heavy (Viral Punch)</option>
+            </select>
+          </div>
+          <div class="two-col-inputs">
+            <div class="control-group">
+              <label for="inputSubSize" class="control-label">Tamaño (px):</label>
+              <input type="number" id="inputSubSize" class="nle-input" min="24" max="84" value="44" />
+            </div>
+            <div class="control-group">
+              <label for="inputSubColor" class="control-label">Color Palabra Activa:</label>
+              <input type="color" id="inputSubColor" class="nle-input" value="#6366f1" style="height:34px;padding:2px;" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label for="sliderSubBounce" class="control-label">Física de Rebote Elástico (Spring): <span id="valSubBounce">125%</span></label>
+            <input type="range" id="sliderSubBounce" min="100" max="160" value="125" style="accent-color:#fbbf24;" />
+          </div>
+          <div class="control-group">
+            <label for="sliderSubPosY" class="control-label">Altura Vertical Subtítulos (%): <span id="valSubPosY">78%</span></label>
+            <input type="range" id="sliderSubPosY" min="25" max="90" value="78" style="accent-color:#fbbf24;" />
+          </div>
+        </div>
+
+        <div class="prop-bottom-actions">
+          <button type="button" id="btnSaveTimelineBlock" class="btn-save-tl">💾 Guardar en Timeline</button>
+          <button type="button" id="btnDeleteTimelineBlock" class="btn-del-tl">🗑 Eliminar Bloque</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- BOTTOM SECTION: ITERATION COPILOT & MULTILAYER TIMELINE -->
+    <section class="nle-panel" aria-labelledby="timelineTitle">
+      <div class="copilot-bar">
+        <span class="copilot-label">💬 Copiloto de Iteración:</span>
+        <input
+          type="text"
+          id="inputCopilotCommand"
+          class="copilot-input"
+          placeholder="Escribe una orden (ej: 'agrega escena nodos 3d en 12', 'cambia a estilo Hormozi Viral') o ajusta Escala/Posición/Tipografía arriba y pulsa Aplicar..."
+        />
+        <button type="button" id="btnCopilotApply" class="btn-copilot-apply">⚡ Aplicar Cambios y Re-Renderizar Master</button>
+      </div>
+
+      <div class="quick-pills-row">
+        <span>⚡ Acciones Rápidas:</span>
+        <button type="button" class="quick-pill" data-quick-cmd="hormozi">🔥 Estilo Hormozi Viral</button>
+        <button type="button" class="quick-pill" data-quick-cmd="apple">🍎 Estilo Apple Keynote</button>
+        <button type="button" class="quick-pill" data-quick-cmd="kinetic">⚡ Estilo Kinetic Pro</button>
+        <button type="button" class="quick-pill" data-quick-cmd="add_bezier">📐 +Escena Curvas Bézier 3D (14s)</button>
+        <button type="button" class="quick-pill" data-quick-cmd="add_checklist">✅ +Escena Checklist Viral (26s)</button>
+      </div>
+
+      <div class="timeline-header-bar">
+        <h2 id="timelineTitle" style="font-size:0.86rem;margin:0;">4. Línea de Tiempo Multicapa (Clic en cualquier clip o subtítulo para editar Zoom ◆, Posición, Opacidad o Tipografía)</h2>
+        <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.72rem;color:#94a3b8;">
+          <label style="display:flex;align-items:center;gap:0.35rem;">
+            🔍 Zoom Timeline:
+            <input type="range" id="sliderTimelineZoom" min="1" max="2.5" step="0.1" value="1.0" style="width:90px;accent-color:#38bdf8;" />
+            <span id="valTimelineZoom" style="color:#38bdf8;font-weight:700;">1.0x</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:0.3rem;cursor:pointer;">
+            <input type="checkbox" id="chkFollowPlayhead" checked style="accent-color:#38bdf8;" /> Seguir aguja
+          </label>
+        </div>
+      </div>
+
+      <!-- MULTILAYER TIMELINE -->
+      <div class="timeline-container" id="timelineScrollWrap">
+        <div class="timeline-inner" id="timelineInner">
+          <!-- Playhead Red Needle -->
+          <div id="timelinePlayhead" class="playhead-line" style="left: 480px;">
+            <div class="playhead-head"></div>
+          </div>
+
+          <!-- Ruler Row -->
+          <div class="tl-row ruler-row">
+            <div class="tl-label">
+              <strong style="color:#38bdf8;font-size:0.65rem;">TIMECODE (SCRUBBING)</strong>
+            </div>
+            <div class="tl-ruler-marks" id="timelineRuler"></div>
+          </div>
+
+          <!-- Track 1: FX Titles -->
+          <div class="tl-row">
+            <div class="tl-label">
+              <strong>🍎 FX • Títulos</strong>
+              <span>Escala / Pos / Opacidad ◆</span>
+            </div>
+            <div class="tl-track-lane" id="laneFx"></div>
+          </div>
+
+          <!-- Track 2: Subtitles -->
+          <div class="tl-row">
+            <div class="tl-label">
+              <strong>💬 T1 • Subtítulos</strong>
+              <span>Tipografía + Keyframes ◆</span>
+            </div>
+            <div class="tl-track-lane" id="laneSub"></div>
+          </div>
+
+          <!-- Track 3: Full-Screen MG -->
+          <div class="tl-row">
+            <div class="tl-label">
+              <strong>✨ MG • Full-Screen</strong>
+              <span>6 Plantillas 60 FPS</span>
+            </div>
+            <div class="tl-track-lane" id="laneMg"></div>
+          </div>
+
+          <!-- Track 4: V1 Jump Cuts -->
+          <div class="tl-row">
+            <div class="tl-label">
+              <strong>🎬 V1 • Jump Cuts</strong>
+              <span>Zoom ◆ / Encuadre / Opacidad</span>
+            </div>
+            <div class="tl-track-lane" id="laneV1"></div>
+          </div>
+
+          <!-- Track 5: A1 Audio Waveform & Silence Cuts -->
+          <div class="tl-row">
+            <div class="tl-label">
+              <strong>🎙 A1 • Onda &amp; Cortes</strong>
+              <span>Rojo = Silencio cortado</span>
+            </div>
+            <div class="tl-track-lane" id="laneAudio">
+              <canvas id="waveformCanvas" class="waveform-canvas" width="1200" height="44"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * Proyecto: Gemini 4 Argon Motion Engine — Estudio NLE Interactivo 60 FPS
+     * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+     * Rol: Desarrollador de Soluciones con Modelos & Agentes Inteligentes
+     * ============================================================================
+     */
+    (function () {
+      'use strict';
+
+      const TOTAL_DURATION = 54.76;
+      let currentTime = 17.81;
+      let isPlaying = false;
+      let audioEnabled = false;
+      let audioCtx = null;
+      let lastFrameTime = performance.now();
+
+      // Global Style & Typography State
+      const state = {
+        format: '9:16',
+        style: 'apple',
+        subFont: 'Outfit',
+        subSize: 44,
+        subColor: '#6366f1',
+        subBounce: 1.25,
+        subPosY: 0.78,
+        timelineZoom: 1.0,
+        selectedTrack: 'mg',
+        selectedBlockId: 'mg-1',
+        userVideoLoaded: false,
+        tracks: {
+          fx: [
+            { id: 'fx-1', label: '🍎 APRENDE IA PRO', start: 0.4, end: 4.2, template: 'apple_glass', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'fx-2', label: '🍎 DE $5 A $10K', start: 25.0, end: 29.5, template: 'metrics_neon', scale: 108, posX: 0, posY: -5, opacity: 100, keyframes: [] },
+            { id: 'fx-3', label: '🍎 JUEVES 24 DE OCT', start: 44.0, end: 48.8, template: 'apple_glass', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] }
+          ],
+          mg: [
+            { id: 'mg-1', label: 'EDICIÓN QUE SE PAGA BIEN', start: 15.75, end: 19.15, template: 'bento_nodes', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [{ t: 15.75, scale: 100 }, { t: 17.8, scale: 112 }] },
+            { id: 'mg-2', label: 'CURVAS BÉZIER 3D ELÁSTICAS', start: 27.1, end: 30.8, template: 'bezier_3d', scale: 105, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'mg-3', label: 'SALTO CUÁNTICO CON ARGON', start: 32.5, end: 36.4, template: 'checklist_viral', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'mg-4', label: 'EXPORTACIÓN MASTER 60 FPS', start: 50.8, end: 54.4, template: 'kinetic_burst', scale: 110, posX: 0, posY: 0, opacity: 100, keyframes: [] }
+          ],
+          v1: [
+            { id: 'v1-1', label: 'V1 • Clip #1 4.05s', start: 0.0, end: 4.05, template: 'bento_nodes', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-2', label: 'V1 • Clip #2 5.23s', start: 4.2, end: 9.43, template: 'bento_nodes', scale: 112, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-3', label: 'V1 • Clip #3 9.7s', start: 9.6, end: 19.3, template: 'bento_nodes', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-4', label: 'V1 • Clip #4 6.22s', start: 19.45, end: 25.67, template: 'bento_nodes', scale: 118, posX: 0, posY: -4, opacity: 100, keyframes: [] },
+            { id: 'v1-5', label: 'V1 • Clip #5 4.7s', start: 25.8, end: 30.5, template: 'bento_nodes', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-6', label: 'V1 • Clip #6 5.42s', start: 30.65, end: 36.07, template: 'bento_nodes', scale: 108, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-7', label: 'V1 • Clip #7 2.1s', start: 36.2, end: 38.3, template: 'bento_nodes', scale: 124, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-8', label: 'V1 • Clip #8 10.03s', start: 38.45, end: 48.48, template: 'bento_nodes', scale: 100, posX: 0, posY: 0, opacity: 100, keyframes: [] },
+            { id: 'v1-9', label: 'V1 • Clip #9 6.1s', start: 48.6, end: 54.76, template: 'bento_nodes', scale: 115, posX: 0, posY: 0, opacity: 100, keyframes: [] }
+          ],
+          sub: []
+        }
+      };
+
+      // Generate 28 rich subtitle blocks across 54.76s
+      const phrases = [
+        'HOY EDITAREMOS', 'ESTE VIDEO', 'DE FORMA 100%', 'AUTOMÁTICA',
+        'SIN SILENCIOS', 'CON JUMP CUTS', 'Y FÍSICAS', 'ELÁSTICAS PRO',
+        'MIRA CÓMO', 'GEMINI 4 ARGON', 'CREA NODOS 3D', 'TAN AVANZADO',
+        'QUE PARECE', 'AFTER EFFECTS', 'PERO EN VIVO', 'A 60 FPS REALES',
+        'PUEDES MOVER', 'CADA KEYFRAME', 'CAMBIAR ESTILO', 'AL DE HORMOZI',
+        'O APPLE KEYNOTE', 'CON UN CLIC', 'AHORRANDO 4 HORAS', 'DE TRABAJO',
+        'EN CADA VIDEO', 'PARA TU CANAL', 'Y EXPORTANDO', 'DIRECTO A MP4'
+      ];
+      phrases.forEach((text, idx) => {
+        const dur = TOTAL_DURATION / phrases.length;
+        state.tracks.sub.push({
+          id: 'sub-' + (idx + 1),
+          label: text,
+          start: +(idx * dur).toFixed(2),
+          end: +((idx + 1) * dur - 0.08).toFixed(2),
+          template: 'kinetic_burst',
+          scale: 100,
+          posX: 0,
+          posY: 0,
+          opacity: 100,
+          keyframes: []
+        });
+      });
+
+      // DOM Elements
+      const canvas = document.getElementById('nleMonitorCanvas');
+      const ctx = canvas.getContext('2d');
+      const hiddenVideo = document.getElementById('hiddenUserVideo');
+      const sliderSeek = document.getElementById('sliderMonitorSeek');
+      const btnPlayPause = document.getElementById('btnPlayPause');
+      const timecodeBadge = document.getElementById('timecodeHeaderBadge');
+      const playerCurrentTime = document.getElementById('playerCurrentTime');
+      const consoleOutput = document.getElementById('consoleOutput');
+
+      function logConsole(msg, isOk = false) {
+        const now = new Date();
+        const ts = now.toTimeString().slice(0, 8);
+        const div = document.createElement('div');
+        if (isOk) div.className = 'log-ok';
+        div.textContent = `[${ts}] ${msg}`;
+        consoleOutput.appendChild(div);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+      }
+
+      function formatTimecode(sec) {
+        const m = Math.floor(sec / 60);
+        const s = (sec % 60).toFixed(2).padStart(5, '0');
+        return `${String(m).padStart(2, '0')}:${s}`;
+      }
+
+      function getSelectedBlock() {
+        const list = state.tracks[state.selectedTrack] || [];
+        return list.find(b => b.id === state.selectedBlockId) || state.tracks.mg[0];
+      }
+
+      function syncInspectorFromSelected() {
+        const blk = getSelectedBlock();
+        if (!blk) return;
+        document.getElementById('selectedBlockTypeBadge').textContent = state.selectedTrack.toUpperCase();
+        document.getElementById('inspectorBlockHeading').textContent = `Bloque Seleccionado (${blk.id.toUpperCase()})`;
+        document.getElementById('inputBlockLabel').value = blk.label;
+        document.getElementById('selectMgTemplate').value = blk.template || 'bento_nodes';
+        document.getElementById('inputStartTime').value = blk.start;
+        document.getElementById('inputEndTime').value = blk.end;
+        document.getElementById('sliderScale').value = blk.scale;
+        document.getElementById('valScale').textContent = blk.scale + '%';
+        document.getElementById('sliderPosX').value = blk.posX;
+        document.getElementById('valPosX').textContent = blk.posX + '%';
+        document.getElementById('sliderPosY').value = blk.posY;
+        document.getElementById('valPosY').textContent = blk.posY + '%';
+        document.getElementById('sliderOpacity').value = blk.opacity;
+        document.getElementById('valOpacity').textContent = blk.opacity + '%';
+        document.getElementById('kfListSummary').textContent = `${(blk.keyframes || []).length} keyframes activos en bloque`;
+      }
+
+      // Render Timeline Tracks
+      function renderTimeline() {
+        const ruler = document.getElementById('timelineRuler');
+        ruler.innerHTML = '';
+        for (let t = 0; t <= 54; t += 2) {
+          const span = document.createElement('span');
+          span.style.position = 'absolute';
+          span.style.left = `${(t / TOTAL_DURATION) * 100}%`;
+          span.textContent = `0:${String(t).padStart(2, '0')}`;
+          ruler.appendChild(span);
+        }
+
+        const lanes = [
+          { key: 'fx', el: document.getElementById('laneFx'), cls: 'fx-block' },
+          { key: 'sub', el: document.getElementById('laneSub'), cls: 'sub-block' },
+          { key: 'mg', el: document.getElementById('laneMg'), cls: 'mg-block' },
+          { key: 'v1', el: document.getElementById('laneV1'), cls: 'v1-block' }
+        ];
+
+        lanes.forEach(({ key, el, cls }) => {
+          el.innerHTML = '';
+          state.tracks[key].forEach(blk => {
+            const div = document.createElement('div');
+            div.className = `tl-block ${cls} ${blk.id === state.selectedBlockId ? 'selected' : ''}`;
+            const leftPct = (blk.start / TOTAL_DURATION) * 100;
+            const widthPct = Math.max(1.2, ((blk.end - blk.start) / TOTAL_DURATION) * 100);
+            div.style.left = `${leftPct}%`;
+            div.style.width = `${widthPct}%`;
+            div.textContent = blk.label;
+            div.title = `${blk.label} (${blk.start}s - ${blk.end}s)`;
+            div.addEventListener('click', (ev) => {
+              ev.stopPropagation();
+              state.selectedTrack = key;
+              state.selectedBlockId = blk.id;
+              currentTime = blk.start + 0.1;
+              updatePlayheadUI();
+              syncInspectorFromSelected();
+              renderTimeline();
+            });
+            el.appendChild(div);
+          });
+
+          el.onclick = (ev) => {
+            const rect = el.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+            currentTime = +(ratio * TOTAL_DURATION).toFixed(2);
+            updatePlayheadUI();
+          };
+        });
+
+        document.getElementById('kpiMgScenes').textContent = `${state.tracks.mg.length} Escenas MG`;
+        document.getElementById('kpiSubtitles').textContent = `${state.tracks.sub.length} bloques`;
+        document.getElementById('kpiJumpCuts').textContent = `${state.tracks.v1.length} (-22.01s)`;
+      }
+
+      // Draw Audio Waveform with Red Silence Cut Markers
+      function drawWaveform() {
+        const wfCanvas = document.getElementById('waveformCanvas');
+        const wctx = wfCanvas.getContext('2d');
+        const W = wfCanvas.width;
+        const H = wfCanvas.height;
+        wctx.clearRect(0, 0, W, H);
+
+        const bars = 180;
+        const barW = W / bars;
+        for (let i = 0; i < bars; i++) {
+          const t = (i / bars) * TOTAL_DURATION;
+          // Check if inside a V1 clip or silence gap
+          const inClip = state.tracks.v1.some(c => t >= c.start && t <= c.end);
+          const amp = inClip
+            ? (0.28 + 0.65 * Math.abs(Math.sin(i * 0.45) * Math.cos(i * 0.19)))
+            : 0.14;
+          const h = amp * (H - 8);
+          wctx.fillStyle = inClip ? '#38bdf8' : '#ef4444';
+          wctx.fillRect(i * barW + 1, (H - h) / 2, Math.max(2, barW - 2), h);
+        }
+      }
+
+      function updatePlayheadUI() {
+        sliderSeek.value = currentTime;
+        timecodeBadge.textContent = `${formatTimecode(currentTime)} / ${formatTimecode(TOTAL_DURATION)}`;
+        const mins = Math.floor(currentTime / 60);
+        const secs = String(Math.floor(currentTime % 60)).padStart(2, '0');
+        playerCurrentTime.textContent = `${mins}:${secs}`;
+
+        const laneEl = document.getElementById('laneV1');
+        if (laneEl) {
+          const laneW = laneEl.clientWidth || 935;
+          const px = 165 + (currentTime / TOTAL_DURATION) * laneW;
+          document.getElementById('timelinePlayhead').style.left = `${px}px`;
+        }
+
+        // Update Active Badges
+        const activeClip = state.tracks.v1.find(b => currentTime >= b.start && currentTime <= b.end);
+        const activeMg = state.tracks.mg.find(b => currentTime >= b.start && currentTime <= b.end);
+        const activeSub = state.tracks.sub.find(b => currentTime >= b.start && currentTime <= b.end);
+
+        document.getElementById('badgeActiveClip').textContent = activeClip ? `🎬 ${activeClip.label}` : '✂ Silencio Cortado (Jump Cut)';
+        document.getElementById('badgeActiveMg').textContent = activeMg ? `✨ MG • ${activeMg.label}` : '✨ Cámara Principal Activa';
+        document.getElementById('badgeActiveSub').textContent = activeSub ? `💬 ${activeSub.label}` : '💬 ...';
+      }
+
+      // 60 FPS Canvas Renderer (Apple Bento 3D + Presenter + Elastic Subtitles)
+      function renderMonitorFrame() {
+        const W = canvas.width;
+        const H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        // Background Gradient according to Global Style
+        const grad = ctx.createLinearGradient(0, 0, W, H);
+        if (state.style === 'apple') {
+          grad.addColorStop(0, '#090d18');
+          grad.addColorStop(0.5, '#111a2e');
+          grad.addColorStop(1, '#070a12');
+        } else if (state.style === 'hormozi') {
+          grad.addColorStop(0, '#0f0a06');
+          grad.addColorStop(0.5, '#1c1208');
+          grad.addColorStop(1, '#080604');
+        } else {
+          grad.addColorStop(0, '#0b0716');
+          grad.addColorStop(0.5, '#191032');
+          grad.addColorStop(1, '#06040d');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Determine active V1 and MG blocks
+        const activeClip = state.tracks.v1.find(b => currentTime >= b.start && currentTime <= b.end) || state.tracks.v1[0];
+        const activeMg = state.tracks.mg.find(b => currentTime >= b.start && currentTime <= b.end);
+        const activeFx = state.tracks.fx.find(b => currentTime >= b.start && currentTime <= b.end);
+        const activeSub = state.tracks.sub.find(b => currentTime >= b.start && currentTime <= b.end);
+
+        const targetBlk = activeMg || activeClip || getSelectedBlock();
+        const scaleFactor = (targetBlk ? targetBlk.scale : 100) / 100;
+        const offsetX = ((targetBlk ? targetBlk.posX : 0) / 100) * (W * 0.4);
+        const offsetY = ((targetBlk ? targetBlk.posY : 0) / 100) * (H * 0.4);
+        const alpha = (targetBlk ? targetBlk.opacity : 100) / 100;
+
+        ctx.save();
+        ctx.translate(W / 2 + offsetX, H / 2 + offsetY);
+        ctx.scale(scaleFactor, scaleFactor);
+        ctx.translate(-W / 2, -H / 2);
+        ctx.globalAlpha = alpha;
+
+        // Draw subtle background grid
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.06)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < W; x += 60) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, H);
+          ctx.stroke();
+        }
+        for (let y = 0; y < H; y += 60) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(W, y);
+          ctx.stroke();
+        }
+
+        // If user uploaded a real video, draw it
+        if (state.userVideoLoaded && hiddenVideo.readyState >= 2) {
+          ctx.drawImage(hiddenVideo, 0, 0, W, H);
+        } else {
+          // Draw Studio Ambient Glow & Procedural Presenter Silhouette / Studio Card
+          const glow = ctx.createRadialGradient(W * 0.5, H * 0.35, 30, W * 0.5, H * 0.35, W * 0.65);
+          glow.addColorStop(0, 'rgba(99, 102, 241, 0.25)');
+          glow.addColorStop(1, 'transparent');
+          ctx.fillStyle = glow;
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        // Top Pill Tag ("WORKSHOP GRATUITO • CLASE #2")
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+        ctx.lineWidth = 2;
+        roundRect(ctx, W * 0.26, H * 0.05, W * 0.48, 38, 19, true, true);
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = '700 15px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('WORKSHOP GRATUITO • CLASE #2', W * 0.5, H * 0.05 + 24);
+
+        // Render Motion Graphics Scene (Bento 3D / Nodes / Bezier / Checklist)
+        const mgToRender = activeMg || getSelectedBlock();
+        const tpl = mgToRender ? mgToRender.template : 'bento_nodes';
+        const titleText = mgToRender ? mgToRender.label : 'EDICIÓN QUE SE PAGA BIEN';
+
+        // Main Headline
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 34px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(titleText, W * 0.5, H * 0.23);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = '700 16px Inter, sans-serif';
+        ctx.fillText('DE CERO A COMPOSICIONES DE ALTO NIVEL', W * 0.5, H * 0.265);
+
+        // Render 3D Layers / Bento Cards based on template
+        const pulse = Math.sin(currentTime * 4) * 6;
+        if (tpl === 'bento_nodes' || tpl === 'apple_glass') {
+          const cards = [
+            { text: 'CAPA FX • MOTION GRAPHICS 3D', color1: '#a855f7', color2: '#ec4899', y: H * 0.34 },
+            { text: 'CAPA T1 • KINETIC TYPOGRAPHY', color1: '#3b82f6', color2: '#06b6d4', y: H * 0.44 },
+            { text: 'CAPA V1 • COLOR & COMPOSITING', color1: '#10b981', color2: '#059669', y: H * 0.54 }
+          ];
+          cards.forEach((c, idx) => {
+            const cardW = W * 0.68;
+            const cardH = 74;
+            const cardX = (W - cardW) / 2 + Math.sin(currentTime * 2.5 + idx) * 8;
+            const cardY = c.y;
+            const cg = ctx.createLinearGradient(cardX, cardY, cardX + cardW, cardY + cardH);
+            cg.addColorStop(0, c.color1);
+            cg.addColorStop(1, c.color2);
+            ctx.fillStyle = cg;
+            ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+            ctx.lineWidth = 2;
+            roundRect(ctx, cardX, cardY, cardW, cardH, 16, true, true);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 18px Outfit, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(c.text, cardX + 24, cardY + 43);
+
+            // Keyframe diamond icon
+            ctx.fillStyle = '#fde047';
+            ctx.font = '700 22px Inter, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('◆', cardX + cardW - 22, cardY + 44);
+          });
+        } else if (tpl === 'bezier_3d') {
+          // Speed Graph Bezier Curve Box
+          const bx = W * 0.14, by = H * 0.34, bw = W * 0.72, bh = H * 0.26;
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+          ctx.strokeStyle = '#38bdf8';
+          roundRect(ctx, bx, by, bw, bh, 18, true, true);
+          ctx.beginPath();
+          ctx.moveTo(bx + 30, by + bh - 35);
+          ctx.bezierCurveTo(bx + bw * 0.45, by + bh - 30, bx + bw * 0.35, by + 35, bx + bw - 30, by + 35);
+          ctx.strokeStyle = '#a855f7';
+          ctx.lineWidth = 6;
+          ctx.stroke();
+        } else {
+          // Checklist / Metrics Card
+          const bx = W * 0.14, by = H * 0.34, bw = W * 0.72, bh = H * 0.26;
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.16)';
+          ctx.strokeStyle = '#10b981';
+          roundRect(ctx, bx, by, bw, bh, 18, true, true);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 22px Outfit, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('✅ Jump Cuts Automáticos (-22s)', bx + 28, by + 65);
+          ctx.fillText('✅ Subtítulos Elásticos 60 FPS', bx + 28, by + 125);
+          ctx.fillText('✅ Render Master MP4 Directo', bx + 28, by + 185);
+        }
+
+        // FX Upper Badge if active
+        if (activeFx) {
+          ctx.fillStyle = 'rgba(139, 92, 246, 0.9)';
+          roundRect(ctx, W * 0.22, H * 0.12, W * 0.56, 46, 12, true, false);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '800 20px Outfit, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(activeFx.label, W * 0.5, H * 0.12 + 30);
+        }
+
+        // Render Elastic Subtitle at bottom
+        if (activeSub) {
+          const elapsed = currentTime - activeSub.start;
+          // Elastic bounce spring curve
+          const spring = 1 + Math.exp(-elapsed * 8) * Math.cos(elapsed * 22) * (state.subBounce - 1);
+          const subY = H * state.subPosY;
+
+          ctx.save();
+          ctx.translate(W * 0.5, subY);
+          ctx.scale(spring, spring);
+
+          const words = activeSub.label.split(' ');
+          const activeWordIdx = Math.min(words.length - 1, Math.floor((elapsed / Math.max(0.2, activeSub.end - activeSub.start)) * words.length));
+
+          ctx.font = `800 ${state.subSize}px ${state.subFont}, sans-serif`;
+          const fullTextWidth = ctx.measureText(activeSub.label).width;
+          let cursorX = -fullTextWidth / 2;
+
+          words.forEach((word, i) => {
+            const wWidth = ctx.measureText(word + ' ').width;
+            if (i === activeWordIdx) {
+              ctx.fillStyle = state.subColor;
+              roundRect(ctx, cursorX - 8, -state.subSize + 4, wWidth + 4, state.subSize + 14, 10, true, false);
+              ctx.fillStyle = '#ffffff';
+            } else {
+              ctx.fillStyle = '#ffffff';
+            }
+            ctx.textAlign = 'left';
+            ctx.shadowColor = 'rgba(0,0,0,0.85)';
+            ctx.shadowBlur = 10;
+            ctx.fillText(word, cursorX, 0);
+            ctx.shadowBlur = 0;
+            cursorX += wWidth;
+          });
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+        if (fill) ctx.fill();
+        if (stroke) ctx.stroke();
+      }
+
+      // Animation Loop (60 FPS)
+      function tick(now) {
+        const dt = (now - lastFrameTime) / 1000;
+        lastFrameTime = now;
+
+        if (isPlaying) {
+          currentTime += dt;
+          if (currentTime >= TOTAL_DURATION) {
+            currentTime = 0;
+          }
+          updatePlayheadUI();
+        }
+        renderMonitorFrame();
+        requestAnimationFrame(tick);
+      }
+
+      // Interactive Drag & Wheel Zoom on Monitor Canvas
+      let isDraggingCanvas = false;
+      let dragStartX = 0, dragStartY = 0;
+      canvas.addEventListener('mousedown', (e) => {
+        isDraggingCanvas = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!isDraggingCanvas) return;
+        const blk = getSelectedBlock();
+        if (!blk) return;
+        const dx = Math.round((e.clientX - dragStartX) * 0.25);
+        const dy = Math.round((e.clientY - dragStartY) * 0.25);
+        blk.posX = Math.max(-100, Math.min(100, blk.posX + dx));
+        blk.posY = Math.max(-100, Math.min(100, blk.posY + dy));
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        syncInspectorFromSelected();
+      });
+      window.addEventListener('mouseup', () => {
+        isDraggingCanvas = false;
+      });
+      canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const blk = getSelectedBlock();
+        if (!blk) return;
+        const delta = e.deltaY < 0 ? 4 : -4;
+        blk.scale = Math.max(50, Math.min(200, blk.scale + delta));
+        syncInspectorFromSelected();
+      }, { passive: false });
+
+      // Controls Listeners
+      btnPlayPause.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        btnPlayPause.textContent = isPlaying ? '⏸' : '▶';
+        if (state.userVideoLoaded) {
+          isPlaying ? hiddenVideo.play() : hiddenVideo.pause();
+        }
+      });
+
+      sliderSeek.addEventListener('input', (e) => {
+        currentTime = parseFloat(e.target.value);
+        if (state.userVideoLoaded && hiddenVideo.duration) {
+          hiddenVideo.currentTime = currentTime % hiddenVideo.duration;
+        }
+        updatePlayheadUI();
+      });
+
+      // Tabs Switch
+      const tabBtnTransform = document.getElementById('tabBtnTransform');
+      const tabBtnTypography = document.getElementById('tabBtnTypography');
+      const tabPanelTransform = document.getElementById('tabPanelTransform');
+      const tabPanelTypography = document.getElementById('tabPanelTypography');
+
+      tabBtnTransform.addEventListener('click', () => {
+        tabBtnTransform.classList.add('active');
+        tabBtnTypography.classList.remove('active');
+        tabPanelTransform.style.display = 'flex';
+        tabPanelTypography.style.display = 'none';
+      });
+      tabBtnTypography.addEventListener('click', () => {
+        tabBtnTypography.classList.add('active');
+        tabBtnTransform.classList.remove('active');
+        tabPanelTypography.style.display = 'flex';
+        tabPanelTransform.style.display = 'none';
+      });
+
+      // Inspector Sliders & Inputs
+      ['Scale', 'PosX', 'PosY', 'Opacity'].forEach(prop => {
+        const slider = document.getElementById('slider' + prop);
+        const valSpan = document.getElementById('val' + prop);
+        const keyMap = { Scale: 'scale', PosX: 'posX', PosY: 'posY', Opacity: 'opacity' };
+        slider.addEventListener('input', () => {
+          const blk = getSelectedBlock();
+          if (!blk) return;
+          blk[keyMap[prop]] = parseInt(slider.value, 10);
+          valSpan.textContent = slider.value + '%';
+        });
+      });
+
+      document.getElementById('inputBlockLabel').addEventListener('input', (e) => {
+        const blk = getSelectedBlock();
+        if (blk) {
+          blk.label = e.target.value;
+          renderTimeline();
+        }
+      });
+
+      document.getElementById('selectMgTemplate').addEventListener('change', (e) => {
+        const blk = getSelectedBlock();
+        if (blk) blk.template = e.target.value;
+      });
+
+      // Keyframe Presets
+      document.querySelectorAll('.btn-preset[data-preset]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const blk = getSelectedBlock();
+          if (!blk) return;
+          const preset = btn.getAttribute('data-preset');
+          if (preset === 'zoom_in') { blk.scale = 128; }
+          else if (preset === 'punch_in') { blk.scale = 126; }
+          else if (preset === 'zoom_out') { blk.scale = 100; }
+          else if (preset === 'fade_pop') { blk.scale = 115; blk.opacity = 95; }
+          else if (preset === 'reset') { blk.scale = 100; blk.posX = 0; blk.posY = 0; blk.opacity = 100; }
+          blk.keyframes = blk.keyframes || [];
+          blk.keyframes.push({ t: +currentTime.toFixed(2), scale: blk.scale });
+          syncInspectorFromSelected();
+          logConsole(`Preset '${preset}' aplicado al bloque ${blk.id.toUpperCase()} en t=${currentTime.toFixed(2)}s`, true);
+        });
+      });
+
+      document.getElementById('btnAddKeyframeHere').addEventListener('click', () => {
+        const blk = getSelectedBlock();
+        if (!blk) return;
+        blk.keyframes = blk.keyframes || [];
+        blk.keyframes.push({ t: +currentTime.toFixed(2), scale: blk.scale, posX: blk.posX, posY: blk.posY, opacity: blk.opacity });
+        syncInspectorFromSelected();
+        logConsole(`Keyframe ◆ insertado en ${blk.id.toUpperCase()} @ ${currentTime.toFixed(2)}s`, true);
+      });
+
+      document.getElementById('btnClearKeyframes').addEventListener('click', () => {
+        const blk = getSelectedBlock();
+        if (!blk) return;
+        blk.keyframes = [];
+        syncInspectorFromSelected();
+        logConsole(`Keyframes limpiados en ${blk.id.toUpperCase()}`);
+      });
+
+      // Subtitle Typography Controls
+      document.getElementById('selectSubFont').addEventListener('change', e => { state.subFont = e.target.value; });
+      document.getElementById('inputSubSize').addEventListener('input', e => { state.subSize = parseInt(e.target.value, 10) || 44; });
+      document.getElementById('inputSubColor').addEventListener('input', e => { state.subColor = e.target.value; });
+      document.getElementById('sliderSubBounce').addEventListener('input', e => {
+        state.subBounce = parseInt(e.target.value, 10) / 100;
+        document.getElementById('valSubBounce').textContent = e.target.value + '%';
+      });
+      document.getElementById('sliderSubPosY').addEventListener('input', e => {
+        state.subPosY = parseInt(e.target.value, 10) / 100;
+        document.getElementById('valSubPosY').textContent = e.target.value + '%';
+      });
+
+      // Global Format & Style Controls
+      document.getElementById('selectCameraFormat').addEventListener('change', (e) => {
+        state.format = e.target.value;
+        if (state.format === '9:16') { canvas.width = 720; canvas.height = 1280; }
+        else if (state.format === '16:9') { canvas.width = 1280; canvas.height = 720; }
+        else { canvas.width = 1080; canvas.height = 1080; }
+        document.getElementById('kpiMasterFormat').textContent = `${canvas.width}x${canvas.height} @ 60fps`;
+        logConsole(`Formato de cámara actualizado a ${state.format} (${canvas.width}x${canvas.height})`, true);
+      });
+
+      document.getElementById('selectEditStyle').addEventListener('change', (e) => {
+        state.style = e.target.value;
+        if (state.style === 'hormozi') state.subColor = '#eab308';
+        else if (state.style === 'apple') state.subColor = '#6366f1';
+        else state.subColor = '#06b6d4';
+        logConsole(`Estilo global cambiado a '${state.style.toUpperCase()}'`, true);
+      });
+
+      // Add MG Scene, FX Title, Split at Playhead
+      document.getElementById('btnAddMgScene').addEventListener('click', () => {
+        const id = 'mg-' + (state.tracks.mg.length + 1);
+        const newBlk = {
+          id,
+          label: 'NUEVA ESCENA 3D #' + (state.tracks.mg.length + 1),
+          start: +currentTime.toFixed(2),
+          end: +Math.min(TOTAL_DURATION, currentTime + 3.5).toFixed(2),
+          template: 'bento_nodes',
+          scale: 105,
+          posX: 0,
+          posY: 0,
+          opacity: 100,
+          keyframes: [{ t: +currentTime.toFixed(2), scale: 105 }]
+        };
+        state.tracks.mg.push(newBlk);
+        state.selectedTrack = 'mg';
+        state.selectedBlockId = id;
+        renderTimeline();
+        syncInspectorFromSelected();
+        logConsole(`Escena Motion Graphics ${id.toUpperCase()} agregada en t=${currentTime.toFixed(2)}s`, true);
+      });
+
+      document.getElementById('btnAddFxTitle').addEventListener('click', () => {
+        const id = 'fx-' + (state.tracks.fx.length + 1);
+        state.tracks.fx.push({
+          id,
+          label: '🍎 TÍTULO KEYNOTE #' + (state.tracks.fx.length + 1),
+          start: +currentTime.toFixed(2),
+          end: +Math.min(TOTAL_DURATION, currentTime + 3.0).toFixed(2),
+          template: 'apple_glass',
+          scale: 100,
+          posX: 0,
+          posY: 0,
+          opacity: 100,
+          keyframes: []
+        });
+        state.selectedTrack = 'fx';
+        state.selectedBlockId = id;
+        renderTimeline();
+        syncInspectorFromSelected();
+        logConsole(`Título FX ${id.toUpperCase()} insertado en t=${currentTime.toFixed(2)}s`, true);
+      });
+
+      document.getElementById('btnSplitPlayhead').addEventListener('click', () => {
+        const idx = state.tracks.v1.findIndex(c => currentTime > c.start + 0.3 && currentTime < c.end - 0.3);
+        if (idx !== -1) {
+          const orig = state.tracks.v1[idx];
+          const oldEnd = orig.end;
+          orig.end = +currentTime.toFixed(2);
+          state.tracks.v1.splice(idx + 1, 0, {
+            id: 'v1-' + (state.tracks.v1.length + 1),
+            label: `V1 • Clip #${state.tracks.v1.length + 1}`,
+            start: +(currentTime + 0.1).toFixed(2),
+            end: oldEnd,
+            template: 'bento_nodes',
+            scale: 116,
+            posX: 0,
+            posY: 0,
+            opacity: 100,
+            keyframes: []
+          });
+          renderTimeline();
+          drawWaveform();
+          logConsole(`Jump Cut aplicado en aguja (t=${currentTime.toFixed(2)}s)`, true);
+        } else {
+          logConsole(`Coloca la aguja dentro de un clip V1 activo para cortar.`);
+        }
+      });
+
+      // Save / Delete Block
+      document.getElementById('btnSaveTimelineBlock').addEventListener('click', () => {
+        const blk = getSelectedBlock();
+        if (!blk) return;
+        blk.start = parseFloat(document.getElementById('inputStartTime').value) || blk.start;
+        blk.end = parseFloat(document.getElementById('inputEndTime').value) || blk.end;
+        renderTimeline();
+        logConsole(`Bloque ${blk.id.toUpperCase()} guardado y sincronizado en Timeline.`, true);
+      });
+
+      document.getElementById('btnDeleteTimelineBlock').addEventListener('click', () => {
+        const list = state.tracks[state.selectedTrack];
+        if (!list || list.length <= 1) return;
+        state.tracks[state.selectedTrack] = list.filter(b => b.id !== state.selectedBlockId);
+        state.selectedBlockId = state.tracks[state.selectedTrack][0].id;
+        renderTimeline();
+        syncInspectorFromSelected();
+        logConsole(`Bloque eliminado de la pista ${state.selectedTrack.toUpperCase()}.`);
+      });
+
+      // Copilot Natural Language Command Bar & Quick Actions
+      function executeCopilotOrder(cmdText) {
+        const lower = cmdText.toLowerCase();
+        if (lower.includes('hormozi')) {
+          document.getElementById('selectEditStyle').value = 'hormozi';
+          state.style = 'hormozi';
+          state.subColor = '#eab308';
+        } else if (lower.includes('apple')) {
+          document.getElementById('selectEditStyle').value = 'apple';
+          state.style = 'apple';
+          state.subColor = '#6366f1';
+        } else if (lower.includes('kinetic')) {
+          document.getElementById('selectEditStyle').value = 'kinetic';
+          state.style = 'kinetic';
+          state.subColor = '#06b6d4';
+        }
+        if (lower.includes('nodos') || lower.includes('bezier') || lower.includes('checklist') || lower.includes('escena')) {
+          const matchSec = lower.match(/(\d+(\.\d+)?)/);
+          const sec = matchSec ? Math.min(50, parseFloat(matchSec[1])) : currentTime;
+          const tpl = lower.includes('bezier') ? 'bezier_3d' : (lower.includes('checklist') ? 'checklist_viral' : 'bento_nodes');
+          const id = 'mg-' + (state.tracks.mg.length + 1);
+          state.tracks.mg.push({
+            id,
+            label: cmdText.toUpperCase().slice(0, 26),
+            start: +sec.toFixed(2),
+            end: +(sec + 3.5).toFixed(2),
+            template: tpl,
+            scale: 108,
+            posX: 0,
+            posY: 0,
+            opacity: 100,
+            keyframes: []
+          });
+          currentTime = sec;
+        }
+        renderTimeline();
+        updatePlayheadUI();
+        logConsole(`Copiloto ejecutó: "${cmdText}" — Master 60 FPS actualizado.`, true);
+      }
+
+      document.getElementById('btnCopilotApply').addEventListener('click', () => {
+        const val = document.getElementById('inputCopilotCommand').value.trim();
+        executeCopilotOrder(val || 'Re-sincronización de fotogramas clave a 60 FPS');
+        document.getElementById('inputCopilotCommand').value = '';
+      });
+
+      document.querySelectorAll('.quick-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          const cmd = pill.getAttribute('data-quick-cmd');
+          if (cmd === 'hormozi') executeCopilotOrder('Cambia a estilo Hormozi Viral');
+          else if (cmd === 'apple') executeCopilotOrder('Cambia a estilo Apple Keynote');
+          else if (cmd === 'kinetic') executeCopilotOrder('Cambia a estilo Kinetic Pro');
+          else if (cmd === 'add_bezier') executeCopilotOrder('Agrega escena curvas bezier en 14');
+          else if (cmd === 'add_checklist') executeCopilotOrder('Agrega escena checklist viral en 26');
+        });
+      });
+
+      // Dropzone Upload
+      const dropzone = document.getElementById('videoDropzone');
+      const inputUpload = document.getElementById('inputVideoUpload');
+      dropzone.addEventListener('click', () => inputUpload.click());
+      dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          loadUserVideoFile(e.dataTransfer.files[0]);
+        }
+      });
+      inputUpload.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          loadUserVideoFile(e.target.files[0]);
+        }
+      });
+
+      function loadUserVideoFile(file) {
+        const url = URL.createObjectURL(file);
+        hiddenVideo.src = url;
+        hiddenVideo.load();
+        state.userVideoLoaded = true;
+        document.getElementById('loadedVideoName').textContent = `🎬 ${file.name}`;
+        logConsole(`Video local cargado: ${file.name} (${(file.size / 1048576).toFixed(2)} MB)`, true);
+      }
+
+      document.getElementById('btnProcessVideos').addEventListener('click', () => {
+        const bar = document.getElementById('statusProgressBar');
+        const pct = document.getElementById('statusPercentLabel');
+        const lbl = document.getElementById('statusTextLabel');
+        bar.style.width = '15%';
+        pct.textContent = '15%';
+        lbl.textContent = 'Detectando silencios y generando Jump Cuts...';
+        logConsole('Iniciando pipeline NLE: Detección de silencios + Subtítulos elásticos...');
+        setTimeout(() => { bar.style.width = '65%'; pct.textContent = '65%'; lbl.textContent = 'Interpolando curvas Bézier a 60 FPS...'; }, 400);
+        setTimeout(() => {
+          bar.style.width = '100%';
+          pct.textContent = '100%';
+          lbl.textContent = '¡Master 60 FPS listo y sincronizado con la Línea de Tiempo!';
+          logConsole('¡Master 60 FPS procesado y sincronizado con éxito!', true);
+        }, 900);
+      });
+
+      // Header Buttons: Export JSON, Copy Mega-Prompt, Export Real 60 FPS Video
+      document.getElementById('btnDownloadProjectJson').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'proyecto_nle_argon_60fps.json';
+        a.click();
+        logConsole('Paquete de proyecto (.JSON) exportado correctamente.', true);
+      });
+
+      document.getElementById('btnCopyMegaPrompt').addEventListener('click', () => {
+        const megaPrompt = `Crea un Estudio NLE Interactivo a 60 FPS con detección automática de Jump Cuts, subtítulos dinámicos con físicas de rebote elástico, plantillas Motion Graphics estilo Apple Keynote (Frosted Glass + Bento 3D), editor de fotogramas clave (Escala, Posición, Opacidad) y línea de tiempo multicapa con exportación directa a MP4.`;
+        navigator.clipboard.writeText(megaPrompt);
+        logConsole('Mega-Prompt copiado al portapapeles.', true);
+      });
+
+      document.getElementById('btnExportMasterMp4').addEventListener('click', () => {
+        const btn = document.getElementById('btnExportMasterMp4');
+        btn.disabled = true;
+        btn.textContent = '⏳ Renderizando 60 FPS (4s)...';
+        logConsole('Iniciando captura real de Canvas a 60 FPS (MediaRecorder)...');
+
+        const stream = canvas.captureStream(60);
+        const mimeType = MediaRecorder.isTypeSupported('video/mp4')
+          ? 'video/mp4'
+          : (MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm');
+        const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+        const chunks = [];
+        recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: mimeType });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'Master_Argon_60FPS.mp4';
+          a.click();
+          btn.disabled = false;
+          btn.textContent = '⬇ Descargar Master.MP4 (60 FPS)';
+          logConsole('¡Archivo Master_Argon_60FPS.mp4 descargado a 60 FPS!', true);
+        };
+
+        const wasPlaying = isPlaying;
+        isPlaying = true;
+        recorder.start();
+        setTimeout(() => {
+          recorder.stop();
+          isPlaying = wasPlaying;
+        }, 4000);
+      });
+
+      // Timeline Zoom
+      document.getElementById('sliderTimelineZoom').addEventListener('input', (e) => {
+        const z = parseFloat(e.target.value);
+        document.getElementById('valTimelineZoom').textContent = z.toFixed(1) + 'x';
+        document.getElementById('timelineInner').style.minWidth = `${Math.round(1100 * z)}px`;
+        updatePlayheadUI();
+      });
+
+      // Initialize
+      renderTimeline();
+      drawWaveform();
+      syncInspectorFromSelected();
+      updatePlayheadUI();
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

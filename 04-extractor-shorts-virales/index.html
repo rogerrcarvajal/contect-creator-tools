@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<!--
+/**
+ * ============================================================================
+ * Proyecto: Extractor de Shorts Virales (Estudio Web + Pipeline Python)
+ * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+ * Rol: Desarrollador de Soluciones con Modelos & Agentes Inteligentes
+ * Repositorio: https://github.com/rogerrcarvajal/contect-creator-tools
+ * Estándar: Clean Architecture / DDD / Zero-Trust Security / Quantum Glass UI
+ * ============================================================================
+ */
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extractor de Shorts Virales (Whisper + LLM + FFmpeg 1080x1920) — Gemini 4 Argon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/brand-quantum.css" />
+  <style>
+    .shorts-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+      background: rgba(11, 15, 25, 0.92);
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .shorts-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .shorts-brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #8b5cf6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.4);
+    }
+
+    .shorts-brand h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      margin: 0;
+    }
+
+    .shorts-brand p {
+      margin: 0;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    .shorts-layout {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 1.15fr 420px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .shorts-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Pipeline Steps Progress */
+    .pipeline-steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.55rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .pipeline-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .step-pill {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 0.6rem 0.7rem;
+      font-size: 0.72rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .step-pill.done {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .step-pill strong {
+      color: var(--accent-cyan);
+      font-size: 0.74rem;
+    }
+
+    /* 3 Viral Short Cards */
+    .candidates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .candidate-card {
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .candidate-card:hover, .candidate-card.active {
+      border-color: #facc15;
+      background: rgba(30, 41, 59, 0.9);
+      box-shadow: 0 8px 28px rgba(250, 204, 21, 0.14);
+    }
+
+    .cand-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .score-badges {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .badge-viral {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.18);
+      color: #facc15;
+      border: 1px solid rgba(250, 204, 21, 0.4);
+    }
+
+    .badge-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    /* Vertical 9:16 Preview Stage */
+    .vertical-stage-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    #shortPreviewCanvas {
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 9 / 16;
+      background: #070a12;
+      border-radius: 16px;
+      border: 2px solid rgba(250, 204, 21, 0.45);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75);
+      display: block;
+    }
+
+    .code-viewer {
+      background: #060911;
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: #cbd5e1;
+      overflow-x: auto;
+      max-height: 260px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="shorts-topbar">
+    <div class="shorts-brand">
+      <div class="shorts-brand-icon" aria-hidden="true">📱</div>
+      <div>
+        <h1>Extractor Automático de Shorts Virales (Whisper + LLM + FFmpeg)</h1>
+        <p>Detección de 3 Fragmentos de 40s + Crop Central 1080x1920 + Subtítulos Amarillos Activos • Por Rogerr Carvajal</p>
+      </div>
+    </div>
+    <nav style="display:flex;gap:0.6rem;flex-wrap:wrap;" aria-label="Acciones del Extractor de Shorts">
+      <a href="../index.html" id="btnBackHubShorts" class="btn-secondary">🏠 Volver al Hub</a>
+      <button type="button" id="btnCopyPromptShorts" class="btn-secondary">📋 Copiar Prompt</button>
+      <a href="extractor_shorts.py" download="extractor_shorts.py" id="btnDownloadPyScript" class="btn-secondary">🐍 Descargar Script .PY</a>
+      <button type="button" id="btnRenderAll3Shorts" class="btn-primary">⚡ Renderizar los 3 Shorts (.MP4)</button>
+    </nav>
+  </header>
+
+  <main class="shorts-layout">
+    <!-- LEFT COLUMN: PIPELINE, UPLOAD & 3 VIRAL FRAGMENTS -->
+    <section class="card-glass" aria-labelledby="pipelineHeading">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem;">
+        <h2 id="pipelineHeading" style="font-size:1.05rem;margin:0;color:var(--accent-cyan);">
+          🚀 Pipeline Automatizado de 5 Etapas (podcast_full.mp4 → 3 Shorts 9:16)
+        </h2>
+        <div>
+          <label for="inputPodcastVideo" class="btn-secondary" style="padding:0.4rem 0.85rem;font-size:0.78rem;cursor:pointer;">
+            📂 Cargar podcast_full.mp4
+          </label>
+          <input type="file" id="inputPodcastVideo" accept="video/*" hidden />
+          <video id="hiddenPodcastVideo" playsinline muted loop hidden></video>
+        </div>
+      </div>
+
+      <!-- 5 STEPS FLOW -->
+      <div class="pipeline-steps">
+        <div class="step-pill done">
+          <strong>1. Audio &amp; Whisper</strong>
+          <span>Timestamps por palabra extraídos</span>
+        </div>
+        <div class="step-pill done">
+          <strong>2. Análisis LLM</strong>
+          <span>Top 3 fragmentos de 40s (Controversia/Valor)</span>
+        </div>
+        <div class="step-pill done">
+          <strong>3. Crop FFmpeg</strong>
+          <span>Reencuadre central 1080x1920 (9:16)</span>
+        </div>
+        <div class="step-pill done">
+          <strong>4. Subtítulos Pro</strong>
+          <span>Palabra actual iluminada en amarillo</span>
+        </div>
+        <div class="step-pill done">
+          <strong>5. Multi-Render</strong>
+          <span>3 videos MP4 independientes</span>
+        </div>
+      </div>
+
+      <!-- 3 VIRAL CANDIDATES -->
+      <div class="candidates-list" id="candidatesContainer">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- PYTHON FFMPEG COMMAND PREVIEW -->
+      <div style="margin-top:1.25rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
+          <span style="font-size:0.8rem;font-weight:700;color:var(--accent-cyan);">
+            🐍 Comando CLI Python + FFmpeg Generado (`extractor_shorts.py`):
+          </span>
+          <button type="button" id="btnCopyCliCmd" class="btn-secondary" style="padding:0.25rem 0.65rem;font-size:0.72rem;">Copiar CLI</button>
+        </div>
+        <pre class="code-viewer" id="cliCommandPreview">python extractor_shorts.py --input podcast_full.mp4 --output-dir output_shorts --render
+
+# Flujo interno FFmpeg por cada uno de los 3 fragmentos de 40s:
+ffmpeg -y -ss 120.0 -t 40.0 -i podcast_full.mp4 \
+  -vf "crop=ih*9/16:ih,scale=1080:1920,fps=60,ass='output_shorts/short_01_subtitles.ass'" \
+  -c:v libx264 -preset fast -crf 18 -c:a aac -b:a 192k output_shorts/short_01_viral_1080x1920.mp4</pre>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: 1080x1920 VERTICAL CROP PREVIEW & KARAOKE SUBTITLES -->
+    <aside class="card-glass vertical-stage-wrap" aria-labelledby="previewHeading">
+      <div style="width:100%;display:flex;align-items:center;justify-content:space-between;">
+        <h2 id="previewHeading" style="font-size:0.98rem;margin:0;color:#facc15;">
+          📲 Previsualización 1080x1920 (9:16)
+        </h2>
+        <span id="activeShortBadge" class="badge-viral">SHORT #1 (40.0s)</span>
+      </div>
+
+      <canvas id="shortPreviewCanvas" width="1080" height="1920"></canvas>
+
+      <div style="width:100%;display:flex;align-items:center;gap:0.5rem;">
+        <button type="button" id="btnToggleShortPlay" class="btn-secondary" style="padding:0.45rem 0.8rem;">⏸ Pausa</button>
+        <input type="range" id="sliderShortSeek" min="0" max="40" step="0.05" value="0" style="flex:1;accent-color:#facc15;" aria-label="Tiempo dentro del Short de 40s" />
+        <span id="shortTimeLabel" style="font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:#f8fafc;">00.0s / 40.0s</span>
+      </div>
+
+      <button type="button" id="btnExportCurrentShort" class="btn-primary" style="width:100%;">
+        ⬇ Exportar Este Short Independiente (.MP4)
+      </button>
+      <div id="shortExportStatus" style="font-size:0.75rem;color:#34d399;text-align:center;">
+        ✅ Subtítulos centrados con iluminación amarilla activa a 60 FPS.
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * Proyecto: Extractor de Shorts Virales (Estudio Web + Pipeline Python)
+     * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+     * ============================================================================
+     */
+    (function () {
+      'use strict';
+
+      const CANDIDATES = [
+        {
+          rank: 1,
+          title: 'Short #1: ¿La IA reemplazará a los editores tradicionales?',
+          hook: 'Debate de alta controversia sobre el impacto de Gemini 4 Argon en la industria del video.',
+          controversy: 96,
+          value: 94,
+          startSec: 120.0,
+          endSec: 160.0,
+          text: 'EL 90% DE LOS EDITORES PERDERÁN SU EMPLEO SI NO DOMINAN AGENTES DE IA Y AUTOMATIZACIÓN A 60 FPS HOY MISMO EN SUS CANALES DE YOUTUBE'
+        },
+        {
+          rank: 2,
+          title: 'Short #2: El error de las 4 horas en posproducción',
+          hook: 'Alto valor práctico: cómo los jump cuts automáticos triplican la retención del espectador.',
+          controversy: 91,
+          value: 98,
+          startSec: 340.0,
+          endSec: 380.0,
+          text: 'PASAR CUATRO HORAS CORTANDO SILENCIOS A MANO ES EL ERROR MÁS CARO QUE COMETE UN CREADOR DE CONTENIDO CUANDO PUEDE AUTOMATIZARLO CON PYTHON'
+        },
+        {
+          rank: 3,
+          title: 'Short #3: Gemini Canvas vs Google Antigravity en Local',
+          hook: 'Revelación técnica sobre cómo construir tus propias herramientas sin pagar suscripciones caras.',
+          controversy: 89,
+          value: 95,
+          startSec: 610.0,
+          endSec: 650.0,
+          text: 'CÓMO GENERAR HERRAMIENTAS PROPIAS EN SEGUNDOS CON GEMINI 4 ARGON Y GOOGLE ANTIGRAVITY EJECUTANDO FFMPEG Y WHISPER DIRECTAMENTE EN TU ORDENADOR'
+        }
+      ];
+
+      let selectedIndex = 0;
+      let localTime = 0;
+      let isPlaying = true;
+      let lastTick = performance.now();
+      let userVideoReady = false;
+
+      const canvas = document.getElementById('shortPreviewCanvas');
+      const ctx = canvas.getContext('2d');
+      const hiddenVideo = document.getElementById('hiddenPodcastVideo');
+
+      function renderCandidatesList() {
+        const container = document.getElementById('candidatesContainer');
+        container.innerHTML = '';
+
+        CANDIDATES.forEach((c, idx) => {
+          const card = document.createElement('article');
+          card.className = `candidate-card ${idx === selectedIndex ? 'active' : ''}`;
+          card.innerHTML = `
+            <div class="cand-top">
+              <strong style="font-size:0.92rem;color:#f8fafc;">${c.title}</strong>
+              <div class="score-badges">
+                <span class="badge-viral">🔥 Controversia ${c.controversy}/100 • Valor ${c.value}/100</span>
+                <span class="badge-time">${c.startSec.toFixed(0)}s → ${c.endSec.toFixed(0)}s (40s)</span>
+              </div>
+            </div>
+            <p style="margin:0;font-size:0.8rem;color:#94a3b8;">${c.hook}</p>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#cbd5e1;background:rgba(0,0,0,0.35);padding:0.45rem 0.65rem;border-radius:6px;">
+              "${c.text}"
+            </div>
+          `;
+          card.addEventListener('click', () => {
+            selectedIndex = idx;
+            localTime = 0;
+            document.getElementById('activeShortBadge').textContent = `SHORT #${c.rank} (40.0s)`;
+            document.getElementById('cliCommandPreview').textContent =
+`python extractor_shorts.py --input podcast_full.mp4 --output-dir output_shorts --render
+
+# Renderizando Fragmento #${c.rank} (${c.startSec}s - ${c.endSec}s):
+ffmpeg -y -ss ${c.startSec} -t 40.0 -i podcast_full.mp4 \\
+  -vf "crop=ih*9/16:ih,scale=1080:1920,fps=60,ass='output_shorts/short_0${c.rank}_subtitles.ass'" \\
+  -c:v libx264 -preset fast -crf 18 -c:a aac -b:a 192k output_shorts/short_0${c.rank}_viral_1080x1920.mp4`;
+            renderCandidatesList();
+          });
+          container.appendChild(card);
+        });
+      }
+
+      function renderShortFrame(now) {
+        const dt = (now - lastTick) / 1000;
+        lastTick = now;
+
+        if (isPlaying) {
+          localTime = (localTime + dt) % 40.0;
+          document.getElementById('sliderShortSeek').value = localTime.toFixed(2);
+          document.getElementById('shortTimeLabel').textContent = `${localTime.toFixed(1).padStart(4, '0')}s / 40.0s`;
+        }
+
+        const cand = CANDIDATES[selectedIndex];
+        const W = canvas.width;
+        const H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        // If user uploaded a podcast video, apply central 9:16 crop
+        if (userVideoReady && hiddenVideo.readyState >= 2) {
+          const vw = hiddenVideo.videoWidth || 1920;
+          const vh = hiddenVideo.videoHeight || 1080;
+          const cropW = vh * (9 / 16);
+          const cropX = Math.max(0, (vw - cropW) / 2);
+          ctx.drawImage(hiddenVideo, cropX, 0, cropW, vh, 0, 0, W, H);
+        } else {
+          // Studio Podcast Visual Background (1080x1920)
+          const bg = ctx.createLinearGradient(0, 0, W, H);
+          bg.addColorStop(0, '#0c1222');
+          bg.addColorStop(0.5, '#171532');
+          bg.addColorStop(1, '#080a12');
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, W, H);
+
+          // Podcast Studio Mic & Waveform Circle
+          const cx = W / 2;
+          const cy = H * 0.36;
+          for (let r = 0; r < 4; r++) {
+            const rad = 140 + r * 55 + Math.sin(localTime * 5 + r) * 14;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(250, 204, 21, ${0.28 - r * 0.06})`;
+            ctx.lineWidth = 4;
+            ctx.stroke();
+          }
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '800 34px Outfit, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`PODCAST VIRAL • CLIP #${cand.rank}`, cx, H * 0.14);
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = '600 26px JetBrains Mono, monospace';
+          ctx.fillText(`CROP CENTRAL 1080x1920 • ${(cand.startSec + localTime).toFixed(1)}s`, cx, H * 0.18);
+        }
+
+        // STEP 4: THICK SUBTITLES IN THE CENTER, ILLUMINATING CURRENT WORD IN YELLOW
+        const words = cand.text.split(' ');
+        const wordIdx = Math.floor((localTime / 8.0) * words.length) % words.length;
+        const groupStart = Math.floor(wordIdx / 3) * 3;
+        const group = words.slice(groupStart, groupStart + 3);
+        const activeInGroup = wordIdx - groupStart;
+
+        const centerY = H * 0.54;
+        ctx.font = '900 74px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+
+        // Draw each word in the 3-word chunk stacked or centered horizontally
+        group.forEach((w, idx) => {
+          const lineY = centerY + (idx - 1) * 92;
+          const isCurrent = idx === activeInGroup;
+
+          // Thick black outline for high contrast
+          ctx.lineWidth = 16;
+          ctx.strokeStyle = '#000000';
+          ctx.lineJoin = 'round';
+          ctx.strokeText(w, W / 2, lineY);
+
+          // Fill yellow if active word, white otherwise
+          ctx.fillStyle = isCurrent ? '#FACC15' : '#FFFFFF';
+          ctx.fillText(w, W / 2, lineY);
+        });
+
+        requestAnimationFrame(renderShortFrame);
+      }
+
+      document.getElementById('btnToggleShortPlay').addEventListener('click', (e) => {
+        isPlaying = !isPlaying;
+        e.target.textContent = isPlaying ? '⏸ Pausa' : '▶ Play';
+      });
+
+      document.getElementById('sliderShortSeek').addEventListener('input', (e) => {
+        localTime = parseFloat(e.target.value);
+        document.getElementById('shortTimeLabel').textContent = `${localTime.toFixed(1).padStart(4, '0')}s / 40.0s`;
+      });
+
+      document.getElementById('inputPodcastVideo').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          hiddenVideo.src = URL.createObjectURL(file);
+          hiddenVideo.load();
+          hiddenVideo.play();
+          userVideoReady = true;
+          document.getElementById('shortExportStatus').textContent = `✅ Video "${file.name}" cargado con Crop Central 1080x1920 activo.`;
+        }
+      });
+
+      function exportShortVideo(rankLabel) {
+        const statusEl = document.getElementById('shortExportStatus');
+        statusEl.textContent = `⏳ Renderizando ${rankLabel} (1080x1920 @ 60 FPS)...`;
+        const stream = canvas.captureStream(60);
+        const mimeType = MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : 'video/webm';
+        const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+        const chunks = [];
+        recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: mimeType });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `${rankLabel}_1080x1920_viral.mp4`;
+          a.click();
+          statusEl.textContent = `✅ ¡${rankLabel}_1080x1920_viral.mp4 descargado con éxito!`;
+        };
+        recorder.start();
+        setTimeout(() => recorder.stop(), 3500);
+      }
+
+      document.getElementById('btnExportCurrentShort').addEventListener('click', () => {
+        exportShortVideo(`short_0${CANDIDATES[selectedIndex].rank}`);
+      });
+
+      document.getElementById('btnRenderAll3Shorts').addEventListener('click', () => {
+        exportShortVideo('short_01_02_03_master');
+      });
+
+      document.getElementById('btnCopyPromptShorts').addEventListener('click', () => {
+        const p = `Actúa como Productor de Contenido y Desarrollador Python. Tengo un video de un podcast (podcast_full.mp4). Quiero un script de Python que automatice la creación de Shorts. Flujo: 1. Extrae el audio y transcríbelo con Whisper (timestamps). 2. Analiza el texto usando LLM para identificar los 3 fragmentos de 40 seg con mayor controversia/valor. 3. Reencuadre: Aplica un crop central a 1080x1920 usando FFmpeg a esos fragmentos. 4. Subtítulos: Añade subtítulos gruesos al centro, iluminando en amarillo la palabra actual. 5. Renderiza los 3 videos independientes.`;
+        navigator.clipboard.writeText(p);
+        document.getElementById('shortExportStatus').textContent = '📋 Prompt maestro copiado al portapapeles.';
+      });
+
+      document.getElementById('btnCopyCliCmd').addEventListener('click', () => {
+        navigator.clipboard.writeText(document.getElementById('cliCommandPreview').textContent);
+        document.getElementById('shortExportStatus').textContent = '📋 Comando CLI copiado al portapapeles.';
+      });
+
+      renderCandidatesList();
+      requestAnimationFrame(renderShortFrame);
+    })();
+  </script>
+</body>
+</html>

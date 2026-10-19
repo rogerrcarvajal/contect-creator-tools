@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<!--
+/**
+ * ============================================================================
+ * Proyecto: ContentCreator-Tools — Hub Principal de Herramientas IA (RF3)
+ * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+ * Rol: Desarrollador de Soluciones con Modelos & Agentes Inteligentes
+ * Repositorio: https://github.com/rogerrcarvajal/contect-creator-tools
+ * Estándar: Clean Architecture / DDD / Zero-Trust Security / Quantum Glass UI
+ * ============================================================================
+ */
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ContentCreator-Tools — Suite Gemini 4 Argon & Google Antigravity | Rogerr Carvajal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/brand-quantum.css" />
+  <style>
+    .hub-navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(11, 15, 25, 0.88);
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: var(--blur-glass);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .hub-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .hub-logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--gradient-brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.4);
+    }
+
+    .hub-brand h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .hub-brand span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    .hub-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* Hero Banner */
+    .hero-section {
+      text-align: center;
+      max-width: 920px;
+      margin: 0 auto 2.8rem;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent-cyan);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin: 0 0 1rem;
+    }
+
+    .gradient-text {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-section p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin: 0 auto 1.6rem;
+      max-width: 760px;
+    }
+
+    /* Filter & Search Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.5rem 0.95rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(56, 189, 248, 0.18);
+      color: #ffffff;
+      border-color: var(--accent-cyan);
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 260px;
+      flex: 1;
+      max-width: 360px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(11, 15, 25, 0.9);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 960px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.15rem;
+    }
+
+    .tool-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .tool-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .folder-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-glass);
+      color: var(--accent-cyan);
+    }
+
+    .tool-features {
+      margin: 0;
+      padding-left: 1.1rem;
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .prompt-drawer {
+      background: rgba(6, 9, 17, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.73rem;
+      color: #cbd5e1;
+      display: none;
+    }
+
+    .prompt-drawer.open {
+      display: block;
+    }
+
+    .tool-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    /* Comparison Section: Browser Canvas vs Local Antigravity */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 860px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Footer */
+    .hub-footer {
+      border-top: 1px solid var(--border-glass);
+      padding-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION -->
+  <header class="hub-navbar">
+    <div class="hub-brand">
+      <div class="hub-logo-badge" aria-hidden="true">✦</div>
+      <div>
+        <h1>ContentCreator-Tools • Gemini 4 Argon Suite</h1>
+        <span>Ingeniería de Agentes &amp; Herramientas de Producción Audiovisual por Rogerr Carvajal</span>
+      </div>
+    </div>
+    <nav style="display:flex;gap:0.65rem;flex-wrap:wrap;" aria-label="Enlaces externos y repositorio">
+      <a href="https://www.youtube.com/watch?v=cO-U7PczHQI" target="_blank" rel="noopener noreferrer" id="linkYoutubeRef" class="btn-secondary">
+        ▶ Video Referencia
+      </a>
+      <a href="https://www.skool.com/viegas-academy-free-2786/classroom/75e48184?md=5700208bc48944aebb7cc56bf88e9a55" target="_blank" rel="noopener noreferrer" id="linkSkoolRef" class="btn-secondary">
+        🎓 Prompts Skool
+      </a>
+      <a href="https://github.com/rogerrcarvajal/contect-creator-tools" target="_blank" rel="noopener noreferrer" id="linkGithubRepo" class="btn-primary">
+        ⚡ Repo GitHub (contect-creator-tools)
+      </a>
+    </nav>
+  </header>
+
+  <main class="hub-container">
+    <!-- HERO SECTION -->
+    <section class="hero-section" aria-labelledby="heroHeading">
+      <div class="hero-pill">
+        <span>🚀 GEMINI 4 ARGON + GOOGLE ANTIGRAVITY</span>
+      </div>
+      <h2 id="heroHeading">
+        Tu Propio Estudio de <span class="gradient-text">Edición de Vídeo, Audio Procedural y Shorts con IA</span>
+      </h2>
+      <p>
+        Accede directamente a las 4 herramientas desarrolladas a partir de los prompts oficiales del tutorial:
+        Editor de Vídeo Automático NLE a 60 FPS, Generador de Lower Thirds &amp; Motion Graphics 3D, Sintetizador de Música &amp; SFX con Web Audio API, y Extractor de Shorts Virales con Python, Whisper y FFmpeg.
+      </p>
+      <div style="display:flex;justify-content:center;gap:0.8rem;flex-wrap:wrap;">
+        <a href="01-editor-video-automatico/index.html" id="ctaHeroNle" class="btn-primary">
+          🎬 Abrir Estudio NLE Automático (60 FPS)
+        </a>
+        <a href="Docs/FICHA_TECNICA.md" id="ctaHeroDocs" class="btn-secondary">
+          📄 Ver Ficha Técnica &amp; Arquitectura
+        </a>
+      </div>
+    </section>
+
+    <!-- FILTER & SEARCH BAR -->
+    <section class="card-glass filter-bar" aria-label="Filtrar herramientas">
+      <div class="filter-tabs" role="tablist">
+        <button type="button" class="filter-btn active" data-category="all" id="filterBtnAll">Todas las Herramientas (4)</button>
+        <button type="button" class="filter-btn" data-category="nle" id="filterBtnNle">🎬 Editor NLE Automático</button>
+        <button type="button" class="filter-btn" data-category="mg" id="filterBtnMg">✨ Motion Graphics &amp; 3D</button>
+        <button type="button" class="filter-btn" data-category="audio" id="filterBtnAudio">🎹 Sintetizador &amp; SFX</button>
+        <button type="button" class="filter-btn" data-category="shorts" id="filterBtnShorts">📱 Extractor de Shorts</button>
+      </div>
+      <div class="search-box">
+        <input type="search" id="inputSearchTools" placeholder="Buscar por función, prompt o tecnología..." aria-label="Buscar herramientas" />
+      </div>
+    </section>
+
+    <!-- EMPTY STATE (40-frontend-uiux.md compliance) -->
+    <div id="emptyStateBox" class="card-glass" style="display:none;text-align:center;padding:2.5rem;margin-bottom:2rem;">
+      <h3 style="margin-top:0;color:var(--accent-cyan);">No se encontraron herramientas con ese criterio</h3>
+      <p style="color:var(--text-secondary);">Intenta restablecer el filtro para visualizar las 4 estaciones de producción.</p>
+      <button type="button" id="btnResetFilters" class="btn-primary">Mostrar Todas las Herramientas</button>
+    </div>
+
+    <!-- 4 TOOLS CARDS GRID -->
+    <section class="tools-grid" id="toolsGridContainer" aria-label="Catálogo de herramientas desarrolladas">
+
+      <!-- TOOL 01: AUTOMATIC VIDEO EDITOR -->
+      <article class="card-glass tool-card" data-category="nle" data-keywords="editor video automatico jump cuts keyframes 60 fps subtítulos elásticos apple bento">
+        <div>
+          <div class="tool-card-header">
+            <div style="display:flex;gap:0.9rem;align-items:center;">
+              <div class="tool-icon-box" style="background:linear-gradient(135deg,#8b5cf6,#38bdf8);">🎬</div>
+              <div>
+                <span class="folder-badge">📁 01-editor-video-automatico/</span>
+                <h3 style="margin:0.35rem 0 0;font-size:1.22rem;">1. Motor de Edición Automático — Estudio NLE 60 FPS</h3>
+              </div>
+            </div>
+          </div>
+
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin:0.85rem 0;">
+            Réplica funcional al 100% de la estación NLE mostrada por el creador: une múltiples tomas, elimina silencios con Jump Cuts automáticos y renderiza a 60 FPS.
+          </p>
+
+          <ul class="tool-features">
+            <li><strong>Jump Cuts Automáticos:</strong> Detección de silencios (`>0.48s`) en pista `A1 • Onda &amp; Cortes`.</li>
+            <li><strong>Subtítulos con Físicas de Rebote:</strong> Curvas elásticas orgánicas palabra por palabra.</li>
+            <li><strong>Estudio de Keyframes `◆`:</strong> Escala/Zoom, Posición X/Y, Opacidad y 6 plantillas Apple Bento 3D.</li>
+            <li><strong>Copiloto de Iteración + Línea de Tiempo Multicapa (5 pistas)</strong> y exportación directa a `.MP4`.</li>
+          </ul>
+        </div>
+
+        <div id="promptDrawer1" class="prompt-drawer">
+          <strong>Mega-Prompt NLE 60 FPS:</strong><br/>
+          "Crea un Estudio NLE Interactivo a 60 FPS con detección automática de Jump Cuts eliminando silencios, subtítulos dinámicos con físicas de rebote elástico, control de fotogramas clave (Escala, Posición, Opacidad), 6 plantillas Motion Graphics estilo Apple Keynote en una línea de tiempo multicapa de 5 pistas y botón para exportar el video final a .mp4 real a 60 fps."
+        </div>
+
+        <div class="tool-actions">
+          <a href="01-editor-video-automatico/index.html" id="btnLaunchTool01" class="btn-primary">
+            🚀 Abrir Editor Automático NLE →
+          </a>
+          <button type="button" class="btn-secondary btn-toggle-prompt" data-target="promptDrawer1" id="btnPromptTool01">
+            👁 Ver Prompt Maestro
+          </button>
+        </div>
+      </article>
+
+      <!-- TOOL 02: MOTION GRAPHICS, ANIMATIONS & LOWER THIRDS -->
+      <article class="card-glass tool-card" data-category="mg" data-keywords="motion graphics lower thirds titulos animados minimalista neon corporativo chroma 3d webcodecs">
+        <div>
+          <div class="tool-card-header">
+            <div style="display:flex;gap:0.9rem;align-items:center;">
+              <div class="tool-icon-box" style="background:linear-gradient(135deg,#38bdf8,#6366f1);">✨</div>
+              <div>
+                <span class="folder-badge">📁 02-motion-graphics-lower-thirds/</span>
+                <h3 style="margin:0.35rem 0 0;font-size:1.22rem;">2. Creador de Lower Thirds, Animaciones &amp; Estudio 3D</h3>
+              </div>
+            </div>
+          </div>
+
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin:0.85rem 0;">
+            Generador interactivo de textos animados (Lower Thirds) y gráficos en movimiento 3D con captura directa de Canvas a 60 FPS listo para cualquier editor.
+          </p>
+
+          <ul class="tool-features">
+            <li><strong>Inputs Dinámicos:</strong> Título Principal, Subtítulo/Rol y Etiqueta/Badge en tiempo real.</li>
+            <li><strong>4 Estilos Visuales:</strong> Minimalista, Neón (Quantum Glow), Corporativo y Estudio 3D Orb.</li>
+            <li><strong>4 Físicas de Animación:</strong> Suave, Rebote Elástico, Entrada Rápida y Giro 3D Orbital.</li>
+            <li><strong>Selector de Fondo:</strong> Transparente, Oscuro o Verde/Azul Chroma + <strong>Exportar a MP4 (60 FPS)</strong>.</li>
+          </ul>
+        </div>
+
+        <div id="promptDrawer2" class="prompt-drawer">
+          <strong>Prompt Oficial #1 (Skool):</strong><br/>
+          "Crea una app web en un solo archivo HTML para generar textos animados (Lower Thirds). Debe tener una interfaz fácil de usar. Controles: 1. Inputs para Título y Subtítulo. 2. Selector de Estilo Visual (Minimalista, Neón, Corporativo). 3. Selector de Animación (Suave, Rebote, Entrada Rápida). 4. Selector de Fondo: Transparente, Oscuro o Verde Chroma. Funcionalidad: Un botón 'Exportar a MP4' que capture la animación del Canvas a 60fps y descargue el video para usarlo en cualquier editor."
+        </div>
+
+        <div class="tool-actions">
+          <a href="02-motion-graphics-lower-thirds/index.html" id="btnLaunchTool02" class="btn-primary">
+            🚀 Abrir Estudio Lower Thirds &amp; 3D →
+          </a>
+          <button type="button" class="btn-secondary btn-toggle-prompt" data-target="promptDrawer2" id="btnPromptTool02">
+            👁 Ver Prompt Maestro
+          </button>
+        </div>
+      </article>
+
+      <!-- TOOL 03: PROCEDURAL MUSIC & SFX SYNTHESIZER -->
+      <article class="card-glass tool-card" data-category="audio" data-keywords="sintetizador musica sfx efectos sonido web audio api lofi synthwave whoosh impact riser">
+        <div>
+          <div class="tool-card-header">
+            <div style="display:flex;gap:0.9rem;align-items:center;">
+              <div class="tool-icon-box" style="background:linear-gradient(135deg,#ec4899,#8b5cf6);">🎹</div>
+              <div>
+                <span class="folder-badge">📁 03-sintetizador-musica-sfx/</span>
+                <h3 style="margin:0.35rem 0 0;font-size:1.22rem;">3. Sintetizador Procedural de Música &amp; Efectos SFX</h3>
+              </div>
+            </div>
+          </div>
+
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin:0.85rem 0;">
+            Estudio de audio procedural libre de copyright basado en Web Audio API con secuenciador multipista, botonera SFX en vivo y visualizador FFT en Canvas.
+          </p>
+
+          <ul class="tool-features">
+            <li><strong>Sección 1 (Pistas):</strong> Selector de género (Lo-Fi, Synthwave, Cyberpunk, Ambient) con Play y Regenerar.</li>
+            <li><strong>Sección 2 (Botonera SFX):</strong> Síntesis al vuelo de Whoosh, Cinematic Impact, Riser, UI Clicks y más.</li>
+            <li><strong>Sección 3 (Visualizador):</strong> Canvas de espectro y onda reactivo al audio a 60 FPS.</li>
+            <li><strong>Sección 4 (Exportar):</strong> Botón "Grabar y Exportar MP4/WAV" para descargar la composición final.</li>
+          </ul>
+        </div>
+
+        <div id="promptDrawer3" class="prompt-drawer">
+          <strong>Prompt Oficial #2 (Skool):</strong><br/>
+          "Crea una app web en HTML/JS que genere música procedural libre de copyright y efectos de sonido (SFX) usando Web Audio API, junto con un visualizador en Canvas. Interfaz en 2 secciones: 1. Pistas: Selector de género (Lo-Fi, Synthwave) con Play/Regenerar. 2. Botonera SFX: Panel para generar efectos sintetizados al vuelo (Whoosh, Cinematic Impact, Riser, UI Clicks). 3. Visualización: Canvas que reaccione al audio. 4. Exportar: Botón 'Grabar y Exportar MP4/WAV' para descargar la composición final."
+        </div>
+
+        <div class="tool-actions">
+          <a href="03-sintetizador-musica-sfx/index.html" id="btnLaunchTool03" class="btn-primary">
+            🚀 Abrir Sintetizador Música &amp; SFX →
+          </a>
+          <button type="button" class="btn-secondary btn-toggle-prompt" data-target="promptDrawer3" id="btnPromptTool03">
+            👁 Ver Prompt Maestro
+          </button>
+        </div>
+      </article>
+
+      <!-- TOOL 04: VIRAL SHORTS EXTRACTOR -->
+      <article class="card-glass tool-card" data-category="shorts" data-keywords="extractor shorts virales python whisper llm ffmpeg 1080x1920 subtitulos amarillos">
+        <div>
+          <div class="tool-card-header">
+            <div style="display:flex;gap:0.9rem;align-items:center;">
+              <div class="tool-icon-box" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">📱</div>
+              <div>
+                <span class="folder-badge">📁 04-extractor-shorts-virales/</span>
+                <h3 style="margin:0.35rem 0 0;font-size:1.22rem;">4. Extractor de Shorts Virales (Python + Web Studio)</h3>
+              </div>
+            </div>
+          </div>
+
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin:0.85rem 0;">
+            Automatización completa para extraer 3 Shorts verticales de 40s desde videos largos (`podcast_full.mp4`), combinando script Python (`extractor_shorts.py`) y estudio web.
+          </p>
+
+          <ul class="tool-features">
+            <li><strong>1. Audio &amp; Whisper:</strong> Transcripción automática con marcas de tiempo por palabra (`timestamps`).</li>
+            <li><strong>2. Análisis LLM:</strong> Identifica los 3 fragmentos de 40s con mayor controversia y valor.</li>
+            <li><strong>3. Reencuadre FFmpeg:</strong> Crop central a `1080x1920` (9:16) a 60 FPS.</li>
+            <li><strong>4 &amp; 5. Subtítulos y Render:</strong> Subtítulos gruesos centrados iluminando en <strong>amarillo</strong> la palabra actual en 3 videos independientes.</li>
+          </ul>
+        </div>
+
+        <div id="promptDrawer4" class="prompt-drawer">
+          <strong>Prompt Oficial #3 (Skool):</strong><br/>
+          "Actúa como Productor de Contenido y Desarrollador Python. Tengo un video de un podcast (podcast_full.mp4). Quiero un script de Python que automatice la creación de Shorts. Flujo: 1. Extrae el audio y transcríbelo con Whisper (timestamps). 2. Analiza el texto usando LLM para identificar los 3 fragmentos de 40 seg con mayor controversia/valor. 3. Reencuadre: Aplica un crop central a 1080x1920 usando FFmpeg a esos fragmentos. 4. Subtítulos: Añade subtítulos gruesos al centro, iluminando en amarillo la palabra actual. 5. Renderiza los 3 videos independientes."
+        </div>
+
+        <div class="tool-actions">
+          <a href="04-extractor-shorts-virales/index.html" id="btnLaunchTool04" class="btn-primary">
+            🚀 Abrir Extractor de Shorts →
+          </a>
+          <button type="button" class="btn-secondary btn-toggle-prompt" data-target="promptDrawer4" id="btnPromptTool04">
+            👁 Ver Prompt Maestro
+          </button>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- BROWSER CANVAS VS LOCAL ANTIGRAVITY SECTION -->
+    <section class="comparison-grid" aria-label="Comparativa Navegador vs Local">
+      <div class="card-glass">
+        <h3 style="margin-top:0;color:var(--accent-cyan);">🌐 Modo Navegador (Gemini Canvas / Web APIs)</h3>
+        <p style="color:var(--text-secondary);font-size:0.88rem;">
+          Ideal para herramientas autocontenidas que se ejecutan instantáneamente sin instalar dependencias:
+        </p>
+        <ul class="tool-features">
+          <li>Renderizado gráfico a 60 FPS con <strong>HTML5 Canvas 2D / WebGL</strong> y `MediaRecorder` / `WebCodecs`.</li>
+          <li>Síntesis musical y de efectos libre de copyright con <strong>Web Audio API</strong> y `OfflineAudioContext`.</li>
+          <li>Cero configuración de servidor: abrir cualquier `index.html` y exportar recursos al instante.</li>
+        </ul>
+      </div>
+
+      <div class="card-glass">
+        <h3 style="margin-top:0;color:#a855f7;">💻 Modo Local (Google Antigravity + Python + FFmpeg)</h3>
+        <p style="color:var(--text-secondary);font-size:0.88rem;">
+          Indispensable cuando las herramientas requieren procesamiento pesado de archivos locales y modelos de IA:
+        </p>
+        <ul class="tool-features">
+          <li>Acceso directo al sistema de archivos para procesar brutos largos (`podcast_full.mp4`) sin límites de RAM del navegador.</li>
+          <li>Ejecución de <strong>OpenAI Whisper</strong> local para transcripción precisa con timestamps por palabra.</li>
+          <li>Pipeline <strong>FFmpeg (`libx264`)</strong> para recorte `1080x1920`, detección de silencios (`silencedetect`) y quemado `.ASS`.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="hub-footer">
+      <div>
+        <strong>Desarrollador Líder:</strong> Rogerr Carvajal (<a href="https://github.com/rogerrcarvajal" target="_blank" rel="noopener noreferrer" style="color:var(--accent-cyan);">@rogerrcarvajal</a>) — Lead AI Engineer &amp; Autonomous Agent Systems Architect
+      </div>
+      <div>
+        Engineered with <strong>Google Antigravity &amp; Gemini 4 Argon</strong> • Estándar Clean Architecture &amp; Zero-Trust
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * Proyecto: ContentCreator-Tools — Controlador Interactivo del Hub Principal
+     * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+     * ============================================================================
+     */
+    (function () {
+      'use strict';
+
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const searchInput = document.getElementById('inputSearchTools');
+      const cards = document.querySelectorAll('.tool-card');
+      const emptyBox = document.getElementById('emptyStateBox');
+      let currentCategory = 'all';
+
+      function applyFilter() {
+        const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const cat = card.getAttribute('data-category');
+          const kw = (card.getAttribute('data-keywords') || '') + ' ' + card.textContent.toLowerCase();
+          const matchCat = currentCategory === 'all' || cat === currentCategory;
+          const matchQuery = !query || kw.includes(query);
+
+          if (matchCat && matchQuery) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        emptyBox.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category');
+          applyFilter();
+        });
+      });
+
+      searchInput.addEventListener('input', applyFilter);
+
+      document.getElementById('btnResetFilters').addEventListener('click', () => {
+        searchInput.value = '';
+        currentCategory = 'all';
+        filterBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-category') === 'all'));
+        applyFilter();
+      });
+
+      document.querySelectorAll('.btn-toggle-prompt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const drawer = document.getElementById(targetId);
+          if (drawer) {
+            const isOpen = drawer.classList.toggle('open');
+            btn.textContent = isOpen ? '🙈 Ocultar Prompt' : '👁 Ver Prompt Maestro';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

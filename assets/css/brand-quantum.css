@@ -1,0 +1,165 @@
+/**
+ * ============================================================================
+ * Proyecto: ContentCreator-Tools (Gemini 4 Argon & Google Antigravity Suite)
+ * Autor: Rogerr Carvajal <rogerrcarvajal@gmail.com>
+ * Rol: Desarrollador de Soluciones con Modelos & Agentes Inteligentes
+ * Repositorio: https://github.com/rogerrcarvajal/contect-creator-tools
+ * Estándar: Clean Architecture / DDD / Zero-Trust Security / Quantum Glass UI
+ * ============================================================================
+ */
+
+:root {
+  /* Surface & Backgrounds */
+  --bg-dark-primary: #0b0f19;
+  --bg-dark-surface: #111827;
+  --bg-dark-card: #1e293b;
+  --bg-glass: rgba(30, 41, 59, 0.72);
+  --bg-glass-hover: rgba(51, 65, 85, 0.84);
+  --bg-panel-deep: rgba(11, 15, 25, 0.88);
+
+  /* Brand Accents & Gradients */
+  --accent-cyan: #38bdf8;
+  --accent-indigo: #6366f1;
+  --accent-purple: #8b5cf6;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #ef4444;
+  --gradient-brand: linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #8b5cf6 100%);
+  --gradient-card-glow: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 70%);
+
+  /* Typography Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #38bdf8;
+
+  /* Borders & Glass Dividers */
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-active: rgba(56, 189, 248, 0.45);
+
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+
+  /* Shadows & Effects */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --blur-glass: blur(12px);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark-primary);
+  background-image:
+    radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.1), transparent 35%),
+    radial-gradient(circle at 88% 15%, rgba(139, 92, 246, 0.12), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(99, 102, 241, 0.08), transparent 45%);
+  color: var(--text-primary);
+  font-family: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card-glass {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-glass);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-card-glow);
+  pointer-events: none;
+}
+
+.card-glass:hover {
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(56, 189, 248, 0.15);
+}
+
+.btn-primary {
+  background: var(--gradient-brand);
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.35rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.45);
+}
+
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.85);
+  color: var(--text-primary);
+  font-weight: 500;
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 0.65rem 1.15rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.btn-secondary:hover {
+  border-color: var(--border-active);
+  background: var(--bg-glass-hover);
+  color: var(--accent-cyan);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
+}
